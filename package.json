@@ -13,5 +13,9 @@
     "codecov": "^1.0.1",
     "istanbul": "^0.4.5",
     "jasmine": "^2.5.3"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "request": "^2.79.0"
   }
 }
