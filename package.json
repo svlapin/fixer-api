@@ -5,5 +5,11 @@
   "main": "index.js",
   "repository": "git@github.com:svlapin/fixer-api.git",
   "author": "Sergey Lapin <sv0lapin@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "devDependencies": {
+    "jasmine": "^2.5.3"
+  }
 }
