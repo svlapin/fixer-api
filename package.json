@@ -1,6 +1,6 @@
 {
   "name": "fixer-api",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "fixer.io API client in JavaScript",
   "main": "index.js",
   "repository": "git@github.com:svlapin/fixer-api.git",
