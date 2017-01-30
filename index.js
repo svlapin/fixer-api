@@ -1,3 +1,4 @@
 const NodeFixer = require('./lib/NodeFixer');
 
-module.expots = new NodeFixer();
+exports.Fixer = NodeFixer;
+module.exports = new NodeFixer();
