@@ -27,7 +27,7 @@ describe('NodeFixer', () => {
         spyOn(request, 'get');
 
         result = fixer.request(fakePath, fakeOpts);
-      })
+      });
 
       it('calls request#get', () => {
         expect(request.get)
@@ -45,7 +45,7 @@ describe('NodeFixer', () => {
         });
 
         it('rejects resulting promise if a error was provided', (done) => {
-          let err = new Error('Anythyng could go wrong');
+          const err = new Error('Anythyng could go wrong');
           result
             .catch((e) => {
               expect(e).toBe(err);
@@ -86,7 +86,7 @@ describe('NodeFixer', () => {
         });
 
         it('resolves to a value of parsed body', (done) => {
-          const fakeBody = { 'anyKey': 'anyVal' };
+          const fakeBody = { anyKey: 'anyVal' };
 
           result
             .then((res) => {

@@ -47,7 +47,7 @@ describe('Fixer', () => {
           nonexistent: {}
         };
 
-        const res = fixer.latest(fakeOpts);
+        fixer.latest(fakeOpts);
 
         expect(fixer.request).toHaveBeenCalledWith('/latest', {
           base: fakeOpts.base,
