@@ -59,5 +59,47 @@ describe('Fixer', () => {
         expect(fixer.latest()).toBe(fakeRequestResult);
       });
     });
+
+    describe('#forDate', () => {
+      const fakeRequestResult = new Promise(() => {});
+
+      const fakeOpts = {
+        base: 'USD',
+        symbols: 'ANY',
+        nonexistent: {}
+      };
+
+      beforeEach(() => {
+        spyOn(fixer, 'request').and.returnValue(fakeRequestResult);
+      });
+
+      it('calls #request when date is formatted string', () => {
+        const strDate = '2015-05-23';
+        fixer.forDate(strDate, fakeOpts);
+
+        expect(fixer.request).toHaveBeenCalledWith(`/${strDate}`, {
+          base: fakeOpts.base,
+          symbols: fakeOpts.symbols
+        });
+      });
+
+      it('calls #request when date is Date instance', () => {
+        const date = new Date(2015, 4, 25);
+        fixer.forDate(date, fakeOpts);
+
+        expect(fixer.request).toHaveBeenCalledWith('/2015-05-25', {
+          base: fakeOpts.base,
+          symbols: fakeOpts.symbols
+        });
+      });
+
+      it('throws when no date provided', () => {
+        expect(fixer.forDate).toThrowError(/invalid date/i);
+      });
+
+      it('returns promise from #request', () => {
+        expect(fixer.forDate(new Date())).toBe(fakeRequestResult);
+      });
+    });
   });
 });

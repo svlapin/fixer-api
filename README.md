@@ -75,3 +75,16 @@ fixer.latest({ base: 'USD', symbols: ['CHF'] })
 { base: 'USD', date: '2017-01-30', rates: { CHF: 1.0037 } }
 */
 ```
+
+### To fetch rates for specific date
+
+```js
+fixer.forDate('2015-04-01', { base: 'USD', symbols: ['CHF'] })
+  .then((data) => {
+  ...
+```
+
+or by providing `Date` instance:
+```js
+fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'] })
+```
