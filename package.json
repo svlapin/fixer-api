@@ -2,27 +2,35 @@
   "name": "fixer-api",
   "version": "1.2.1",
   "description": "fixer.io API client in JavaScript",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": "git@github.com:svlapin/fixer-api.git",
   "author": "Sergey Lapin <sv0lapin@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jasmine",
-    "eslint": "eslint lib/**/*.js spec/**/*.js"
+    "prepublish": "yarn build",
+    "build": "tsc",
+    "test": "ts-node node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=./spec/support/jasmine.json",
+    "test:coverage": "ts-node node_modules/istanbul/lib/cli.js cover -e .ts  -x \"*.d.ts\" -x \"*.spec.ts\" node_modules/jasmine/bin/jasmine.js -- JASMINE_CONFIG_PATH=./spec/support/jasmine.json",
+    "test:coverage:upload": "codecov --token=e73b8b4f-4600-4c55-94d0-d949114eb73d",
+    "tslint": "tslint lib/**/*.js spec/**/*.js"
   },
   "devDependencies": {
+    "@types/jasmine": "^2.5.53",
     "codecov": "^1.0.1",
-    "eslint": "^3.14.1",
-    "eslint-config-airbnb": "^14.0.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^3.0.2",
-    "eslint-plugin-react": "^6.9.0",
-    "istanbul": "^0.4.5",
-    "jasmine": "^2.5.3"
+    "istanbul": "^1.1.0-alpha.1",
+    "jasmine": "^2.5.3",
+    "ts-node": "^3.2.1",
+    "tslint": "^5.5.0",
+    "tslint-config-airbnb": "^5.2.1"
   },
   "dependencies": {
+    "@types/es6-promise": "^0.0.32",
+    "@types/lodash": "^4.14.71",
+    "@types/moment": "^2.13.0",
+    "@types/request": "^2.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.17.1",
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "typescript": "^2.4.2"
   }
 }
