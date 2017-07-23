@@ -15,22 +15,22 @@
     "tslint": "tslint lib/**/*.js spec/**/*.js"
   },
   "devDependencies": {
+    "@types/es6-promise": "^0.0.32",
     "@types/jasmine": "^2.5.53",
+    "@types/lodash": "^4.14.71",
+    "@types/moment": "^2.13.0",
+    "@types/request": "^2.0.0",
     "codecov": "^1.0.1",
     "istanbul": "^1.1.0-alpha.1",
     "jasmine": "^2.5.3",
     "ts-node": "^3.2.1",
     "tslint": "^5.5.0",
-    "tslint-config-airbnb": "^5.2.1"
+    "tslint-config-airbnb": "^5.2.1",
+    "typescript": "^2.4.2"
   },
   "dependencies": {
-    "@types/es6-promise": "^0.0.32",
-    "@types/lodash": "^4.14.71",
-    "@types/moment": "^2.13.0",
-    "@types/request": "^2.0.0",
     "lodash": "^4.17.4",
     "moment": "^2.17.1",
-    "request": "^2.79.0",
-    "typescript": "^2.4.2"
+    "request": "^2.79.0"
   }
 }
