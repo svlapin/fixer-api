@@ -1,14 +1,13 @@
 'use strict';
 
-const request = require('request');
-const querystring = require('querystring');
-
-const Fixer = require('./Fixer');
+import { get } from 'request';
+import { stringify } from 'querystring';
+import Fixer from './Fixer';
 
 class NodeFixer extends Fixer {
-  request(path, opts) {
+  request(path: string, opts: any) {
     return new Promise((resolve, reject) => {
-      request.get(`${this.baseUrl}${path}?${querystring.stringify(opts)}`, (err, resp, body) => {
+      get(`${this.baseUrl}${path}?${stringify(opts)}`, (err, resp, body) => {
         if (err) {
           reject(err);
           return;
@@ -39,4 +38,4 @@ class NodeFixer extends Fixer {
   }
 }
 
-module.exports = NodeFixer;
+export default NodeFixer;
