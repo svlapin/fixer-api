@@ -1,7 +1,7 @@
 {
   "name": "fixer-api",
-  "version": "1.2.1",
-  "description": "fixer.io API client in JavaScript",
+  "version": "1.2.2",
+  "description": "fixer.io API client in TypeScript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "git@github.com:svlapin/fixer-api.git",
