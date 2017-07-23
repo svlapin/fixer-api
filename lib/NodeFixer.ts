@@ -2,7 +2,6 @@
 
 import { get } from 'request';
 import { stringify } from 'querystring';
-
 import Fixer from './Fixer';
 
 class NodeFixer extends Fixer {
