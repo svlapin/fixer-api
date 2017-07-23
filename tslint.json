@@ -1,4 +1,7 @@
 {
   "extends": "tslint-config-airbnb",
-  "trailing-comma": [true, "never"]
+  "rules": {
+    "trailing-comma": [true, "never"],
+    "no-trailing-whitespace": true
+  }
 }

@@ -13,7 +13,7 @@
     "test": "ts-node node_modules/jasmine/bin/jasmine.js JASMINE_CONFIG_PATH=./spec/support/jasmine.json",
     "test:coverage": "ts-node node_modules/istanbul/lib/cli.js cover -e .ts  -x \"*.d.ts\" -x \"*.spec.ts\" node_modules/jasmine/bin/jasmine.js -- JASMINE_CONFIG_PATH=./spec/support/jasmine.json",
     "test:coverage:upload": "codecov --token=e73b8b4f-4600-4c55-94d0-d949114eb73d",
-    "tslint": "tslint lib/**/*.js spec/**/*.js"
+    "tslint": "tslint lib/**/*.ts"
   },
   "devDependencies": {
     "@types/es6-promise": "^0.0.32",
