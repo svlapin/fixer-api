@@ -3,6 +3,7 @@
   "version": "1.2.1",
   "description": "fixer.io API client in JavaScript",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "git@github.com:svlapin/fixer-api.git",
   "author": "Sergey Lapin <sv0lapin@gmail.com>",
   "license": "MIT",
