@@ -3,7 +3,18 @@
 import { isString, isDate, pick } from 'lodash';
 import * as moment from 'moment';
 
-abstract class Fixer {
+export interface IFixerRates {
+  readonly [currency: string]: number;
+}
+
+export interface IFixerResponse {
+  readonly base: string;
+  readonly date: string;
+  readonly rates: IFixerRates;
+  readonly error?: string;
+}
+
+export abstract class Fixer {
   baseUrl: string;
 
   constructor(opts: any = {}) {
@@ -31,7 +42,5 @@ abstract class Fixer {
     return this.request('/latest', pick(opts, 'base', 'symbols'));
   }
 
-  protected abstract request(url: string, opts: any): Promise<any>;
+  protected abstract request(url: string, opts: any): Promise<IFixerResponse>;
 }
-
-export default Fixer;
