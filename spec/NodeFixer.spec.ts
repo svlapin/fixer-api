@@ -1,5 +1,6 @@
 'use strict';
 
+import { IFixerResponse } from '../lib/Fixer';
 import NodeFixer from '../lib/NodeFixer';
 import * as request from 'request';
 
@@ -15,7 +16,7 @@ describe('NodeFixer', () => {
       const fakePath = '/any';
       const fakeOpts = { anyKey: 'anyVal' };
 
-      let result: Promise<any>;
+      let result: Promise<IFixerResponse>;
 
       beforeEach(() => {
         spyOn(request, 'get');
@@ -80,7 +81,7 @@ describe('NodeFixer', () => {
         });
 
         it('resolves to a value of parsed body', (done) => {
-          const fakeBody = { anyKey: 'anyVal' };
+          const fakeBody = { base: 'any', date: 'any', rates: { ANY: 134 } };
 
           result
             .then((res) => {
@@ -94,7 +95,9 @@ describe('NodeFixer', () => {
     });
 
     describe('#latest', () => {
-      const fakeRequestResult = new Promise(() => {});
+      const fakeRequestResult = new Promise<IFixerResponse>(() => (
+        { base: 'any', date: 'any', rates: { ANY: 134 } }
+      ));
 
       beforeEach(() => {
         fixer.request = jasmine.createSpy('#request').and.returnValue(fakeRequestResult);
@@ -121,7 +124,9 @@ describe('NodeFixer', () => {
     });
 
     describe('#forDate', () => {
-      const fakeRequestResult = new Promise(() => {});
+      const fakeRequestResult = new Promise<IFixerResponse>(() => (
+        { base: 'any', date: 'any', rates: { ANY: 134 } }
+      ));
 
       const fakeOpts = {
         base: 'USD',

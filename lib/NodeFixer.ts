@@ -2,10 +2,10 @@
 
 import { get } from 'request';
 import { stringify } from 'querystring';
-import Fixer from './Fixer';
+import { Fixer, IFixerResponse } from './Fixer';
 
 class NodeFixer extends Fixer {
-  request(path: string, opts: any) {
+  request(path: string, opts: any): Promise<IFixerResponse> {
     return new Promise((resolve, reject) => {
       get(`${this.baseUrl}${path}?${stringify(opts)}`, (err, resp, body) => {
         if (err) {
@@ -18,7 +18,7 @@ class NodeFixer extends Fixer {
           return;
         }
 
-        let parsedBody;
+        let parsedBody: IFixerResponse;
 
         try {
           parsedBody = JSON.parse(body);
