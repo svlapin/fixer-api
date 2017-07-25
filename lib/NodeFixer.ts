@@ -11,7 +11,6 @@ class NodeFixer extends Fixer {
         ({ ...this.baseUrl, path }, (res) => {
           const contentType = res.headers['content-type'];
           let error: (Error | null) = null;
-
           if (res.statusCode !== 200) {
             error = new Error(`Request failed: status code ${res.statusCode}`);
           } else if (!/^application\/json/.test(<string>contentType)) {
