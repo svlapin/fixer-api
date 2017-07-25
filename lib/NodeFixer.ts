@@ -10,7 +10,7 @@ class NodeFixer extends Fixer {
       ('https:' === this.baseUrl.protocol ? https.get : http.get)
         ({ ...this.baseUrl, path }, (res) => {
           const contentType = res.headers['content-type'];
-          let error: Error;
+          let error: (Error | null) = null;
 
           if (res.statusCode !== 200) {
             error = new Error(`Request failed: status code ${res.statusCode}`);
