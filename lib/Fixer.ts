@@ -1,5 +1,6 @@
 'use strict';
 
+import { parse as parseUrl, URL } from 'url';
 import * as moment from 'moment';
 
 export interface IFixerRates {
@@ -14,11 +15,11 @@ export interface IFixerResponse {
 }
 
 export abstract class Fixer {
-  baseUrl: string;
+  baseUrl: URL;
 
   constructor(opts: any = {}) {
     (<any>Object).assign(this, {
-      baseUrl: opts.baseUrl || 'http://api.fixer.io'
+      baseUrl: parseUrl(opts.baseUrl || 'http://api.fixer.io')
     });
   }
 

@@ -2,7 +2,9 @@
 
 import { IFixerResponse } from '../lib/Fixer';
 import NodeFixer from '../lib/NodeFixer';
-import * as request from 'request';
+import * as http from 'http';
+import * as https from 'https';
+import { EventEmitter } from 'events';
 
 describe('NodeFixer', () => {
   describe('instance methods', () => {
@@ -17,81 +19,94 @@ describe('NodeFixer', () => {
       const fakeOpts = { anyKey: 'anyVal' };
 
       let result: Promise<IFixerResponse>;
+      let cb: any;
 
-      beforeEach(() => {
-        spyOn(request, 'get');
+      function testWithProvider(provider: any, providerName: string) {
+        describe(`when baseUrl is ${providerName}`, () => {
+          beforeEach(() => {
+            fixer = new NodeFixer({ baseUrl: `${providerName}://api.fixer.io` });
+            spyOn(provider, 'get');
+            result = fixer.request(fakePath, fakeOpts);
+            cb = (<jasmine.Spy>provider.get).calls.argsFor(0)[1];
+          });
 
-        result = fixer.request(fakePath, fakeOpts);
-      });
+          it(`calls ${providerName}#request`, () => {
+            expect(provider.get).toHaveBeenCalled();
+          });
 
-      it('calls request#get', () => {
-        expect(request.get)
-          .toHaveBeenCalledWith(
-            `${fixer.baseUrl}${fakePath}?anyKey=anyVal`,
-            jasmine.any(Function)
-          );
-      });
+          describe('behavior on response', () => {
+            let resp: any;
+            let emitter: EventEmitter;
 
-      describe('callback provided', () => {
-        let cb: any;
+            beforeEach(() => {
+              emitter = new EventEmitter();
 
-        beforeEach(() => {
-          cb = (<jasmine.Spy>request.get).calls.argsFor(0)[1];
-        });
-
-        it('rejects resulting promise if a error was provided', (done) => {
-          const err = new Error('Anythyng could go wrong');
-          result
-            .catch((e) => {
-              expect(e).toBe(err);
-              done();
+              resp = (<any>Object).assign(emitter, {
+                headers: {},
+                resume: jasmine.createSpy('response#resume'),
+                setEncoding: jasmine.createSpy('response#setEncoding')
+              });
             });
 
-          cb(err);
-        });
+            it('rejects if status code is not 200', (done) => {
+              resp.statusCode = 500;
+              result
+                .catch((err: Error) => {
+                  expect(err.message).toMatch(/status code/);
+                  done();
+                });
 
-        it('rejects resulting promise if no body was provided', (done) => {
-          result
-            .catch((err) => {
-              expect(err.message).toMatch(/empty response/i);
-              done();
+              cb(resp);
             });
 
-          cb(null, null, null);
-        });
+            it('rejects content type is not json', (done) => {
+              resp.statusCode = 200;
+              result
+                .catch((err: Error) => {
+                  expect(err.message).toMatch(/content-type/);
+                  done();
+                });
 
-        it('rejects resulting promise if body is unparsable', (done) => {
-          result
-            .catch((err) => {
-              expect(err.message).toMatch(/failed to parse json/i);
-              done();
+              cb(resp);
             });
 
-          cb(null, null, 'non json');
-        });
+            describe('when statusCode and contentType are correct', () => {
+              beforeEach(() => {
+                resp.statusCode = 200;
+                resp.headers['content-type'] = 'application/json';
+                cb(resp);
+              });
 
-        it('rejects resulting promise if body contains `error` property', (done) => {
-          result
-            .catch((err) => {
-              expect(err.message).toMatch(/error that happened/i);
-              done();
+              it('rejects when non-json supplied', (done) => {
+                result
+                  .catch((err: Error) => {
+                    expect(err.message).toMatch(/JSON body/);
+                    done();
+                  });
+
+                emitter.emit('data', 'any');
+                emitter.emit('end');
+              });
+
+              it('resolves when json supplied', (done) => {
+                const data = { anyKey: 'anyVal' };
+
+                result
+                  .then((parsed: any) => {
+                    expect(parsed).toEqual(data);
+                    done();
+                  });
+
+                emitter.emit('data', JSON.stringify(data));
+                emitter.emit('end');
+              });
             });
-
-          cb(null, null, '{"error": "Error that happened"}');
+          });
         });
+      }
 
-        it('resolves to a value of parsed body', (done) => {
-          const fakeBody = { base: 'any', date: 'any', rates: { ANY: 134 } };
-
-          result
-            .then((res) => {
-              expect(res).toEqual(fakeBody);
-              done();
-            });
-
-          cb(null, null, JSON.stringify(fakeBody));
-        });
-      });
+      testWithProvider(http, 'http');
+      testWithProvider(https, 'https');
     });
 
     describe('#latest', () => {
