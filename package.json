@@ -47,6 +47,7 @@
       ".ts"
     ],
     "reporter": [
+      "lcov",
       "json",
       "html"
     ],
