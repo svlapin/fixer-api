@@ -6,13 +6,23 @@ import * as http from 'http';
 import * as https from 'https';
 import { EventEmitter } from 'events';
 
+import * as sinon from 'sinon';
+import { expect } from 'chai';
+
+const sandbox = sinon.sandbox.create();
+
 describe('NodeFixer', () => {
+  afterEach(() => {
+    sandbox.restore();
+  });
+
   describe('instance methods', () => {
     let fixer: NodeFixer;
 
     beforeEach(() => {
       fixer = new NodeFixer();
     });
+
 
     describe('#request', () => {
       const fakePath = '/any';
@@ -25,13 +35,13 @@ describe('NodeFixer', () => {
         describe(`when baseUrl is ${providerName}`, () => {
           beforeEach(() => {
             fixer = new NodeFixer({ baseUrl: `${providerName}://api.fixer.io` });
-            spyOn(provider, 'get');
+            sandbox.stub(provider, 'get');
             result = fixer.request(fakePath, fakeOpts);
-            cb = (<jasmine.Spy>provider.get).calls.argsFor(0)[1];
+            cb = (<sinon.SinonStub>provider.get).args[0][1];
           });
 
           it(`calls ${providerName}#request`, () => {
-            expect(provider.get).toHaveBeenCalled();
+            expect(provider.get).to.have.been.called;
           });
 
           describe('behavior on response', () => {
@@ -43,8 +53,8 @@ describe('NodeFixer', () => {
 
               resp = (<any>Object).assign(emitter, {
                 headers: {},
-                resume: jasmine.createSpy('response#resume'),
-                setEncoding: jasmine.createSpy('response#setEncoding')
+                resume: sinon.stub(),
+                setEncoding: sinon.stub()
               });
             });
 
@@ -52,7 +62,7 @@ describe('NodeFixer', () => {
               resp.statusCode = 500;
               result
                 .catch((err: Error) => {
-                  expect(err.message).toMatch(/status code/);
+                  expect(err.message).to.match(/status code/);
                   done();
                 });
 
@@ -63,7 +73,7 @@ describe('NodeFixer', () => {
               resp.statusCode = 200;
               result
                 .catch((err: Error) => {
-                  expect(err.message).toMatch(/content-type/);
+                  expect(err.message).to.match(/content-type/);
                   done();
                 });
 
@@ -80,7 +90,7 @@ describe('NodeFixer', () => {
               it('rejects when non-json supplied', (done) => {
                 result
                   .catch((err: Error) => {
-                    expect(err.message).toMatch(/JSON body/);
+                    expect(err.message).to.match(/JSON body/);
                     done();
                   });
 
@@ -93,7 +103,7 @@ describe('NodeFixer', () => {
 
                 result
                   .then((parsed: any) => {
-                    expect(parsed).toEqual(data);
+                    expect(parsed).eql(data);
                     done();
                   });
 
@@ -115,7 +125,7 @@ describe('NodeFixer', () => {
       ));
 
       beforeEach(() => {
-        fixer.request = jasmine.createSpy('#request').and.returnValue(fakeRequestResult);
+        sandbox.stub(fixer, 'request').returns(fakeRequestResult);
       });
 
       it('calls #request with /latest and `base` & `symbols` parameters', () => {
@@ -127,14 +137,14 @@ describe('NodeFixer', () => {
 
         fixer.latest(fakeOpts);
 
-        expect(fixer.request).toHaveBeenCalledWith('/latest', {
+        expect(fixer.request).to.have.been.calledWithExactly('/latest', {
           base: fakeOpts.base,
           symbols: fakeOpts.symbols
         });
       });
 
       it('returns result #request returns', () => {
-        expect(fixer.latest()).toBe(fakeRequestResult);
+        expect(fixer.latest()).equal(fakeRequestResult);
       });
     });
 
@@ -150,14 +160,14 @@ describe('NodeFixer', () => {
       };
 
       beforeEach(() => {
-        fixer.request = jasmine.createSpy('#request').and.returnValue(fakeRequestResult);
+        sandbox.stub(fixer, 'request').returns(fakeRequestResult);
       });
 
       it('calls #request when date is formatted string', () => {
         const strDate = '2015-05-23';
         fixer.forDate(strDate, fakeOpts);
 
-        expect(fixer.request).toHaveBeenCalledWith(`/${strDate}`, {
+        expect(fixer.request).to.have.been.calledWithExactly(`/${strDate}`, {
           base: fakeOpts.base,
           symbols: fakeOpts.symbols
         });
@@ -167,18 +177,18 @@ describe('NodeFixer', () => {
         const date = new Date(2015, 4, 25);
         fixer.forDate(date, fakeOpts);
 
-        expect(fixer.request).toHaveBeenCalledWith('/2015-05-25', {
+        expect(fixer.request).to.have.been.calledWithExactly('/2015-05-25', {
           base: fakeOpts.base,
           symbols: fakeOpts.symbols
         });
       });
 
       it('throws when no date provided', () => {
-        expect(fixer.forDate).toThrowError(/invalid date/i);
+        expect(fixer.forDate).throw(/invalid date/i);
       });
 
       it('returns promise from #request', () => {
-        expect(fixer.forDate(new Date())).toBe(fakeRequestResult);
+        expect(fixer.forDate(new Date())).equal(fakeRequestResult);
       });
     });
   });
