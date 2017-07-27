@@ -14,8 +14,7 @@ class NodeFixer extends Fixer {
           if (res.statusCode !== 200) {
             error = new Error(`Request failed: status code ${res.statusCode}`);
           } else if (!/^application\/json/.test(<string>contentType)) {
-            error = new Error(`Invalid content-type:
-                               expected application/json but received ${contentType}`);
+            error = new Error(`Invalid content-type: ${contentType}`);
           }
 
           if (error) {
