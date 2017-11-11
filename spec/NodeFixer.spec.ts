@@ -2,9 +2,7 @@
 
 import { IFixerResponse } from '../lib/Fixer';
 import NodeFixer from '../lib/NodeFixer';
-import * as http from 'http';
-import * as https from 'https';
-import { EventEmitter } from 'events';
+import * as request from 'request';
 
 import * as sinon from 'sinon';
 import { expect } from 'chai';
@@ -23,100 +21,82 @@ describe('NodeFixer', () => {
       fixer = new NodeFixer();
     });
 
-
     describe('#request', () => {
       const fakePath = '/any';
       const fakeOpts = { anyKey: 'anyVal' };
 
       let result: Promise<IFixerResponse>;
-      let cb: any;
 
-      function testWithProvider(provider: any, providerName: string) {
-        describe(`when baseUrl is ${providerName}`, () => {
-          beforeEach(() => {
-            fixer = new NodeFixer({ baseUrl: `${providerName}://api.fixer.io` });
-            sandbox.stub(provider, 'get');
-            result = fixer.request(fakePath, fakeOpts);
-            cb = (<sinon.SinonStub>provider.get).args[0][1];
-          });
+      beforeEach(() => {
+        sandbox.stub(request, 'get');
 
-          it(`calls ${providerName}#request`, () => {
-            expect(provider.get).to.have.been.called;
-          });
+        result = fixer.request(fakePath, fakeOpts);
+      });
 
-          describe('behavior on response', () => {
-            let resp: any;
-            let emitter: EventEmitter;
+      it('calls request#get', () => {
+        expect(request.get).to.have.been.called;
+      });
 
-            beforeEach(() => {
-              emitter = new EventEmitter();
+      describe('callback provided', () => {
+        let cb: any;
 
-              resp = (<any>Object).assign(emitter, {
-                headers: {},
-                resume: sinon.stub(),
-                setEncoding: sinon.stub()
-              });
-            });
-
-            it('rejects if status code is not 200', (done) => {
-              resp.statusCode = 500;
-              result
-                .catch((err: Error) => {
-                  expect(err.message).to.match(/status code/);
-                  done();
-                });
-
-              cb(resp);
-            });
-
-            it('rejects content type is not json', (done) => {
-              resp.statusCode = 200;
-              result
-                .catch((err: Error) => {
-                  expect(err.message).to.match(/content-type/);
-                  done();
-                });
-
-              cb(resp);
-            });
-
-            describe('when statusCode and contentType are correct', () => {
-              beforeEach(() => {
-                resp.statusCode = 200;
-                resp.headers['content-type'] = 'application/json';
-                cb(resp);
-              });
-
-              it('rejects when non-json supplied', (done) => {
-                result
-                  .catch((err: Error) => {
-                    expect(err.message).to.match(/JSON body/);
-                    done();
-                  });
-
-                emitter.emit('data', 'any');
-                emitter.emit('end');
-              });
-
-              it('resolves when json supplied', (done) => {
-                const data = { anyKey: 'anyVal' };
-
-                result
-                  .then((parsed: any) => {
-                    expect(parsed).eql(data);
-                    done();
-                  });
-
-                emitter.emit('data', JSON.stringify(data));
-                emitter.emit('end');
-              });
-            });
-          });
+        beforeEach(() => {
+          cb = (<sinon.SinonStub>request.get).getCall(0).args[1];
         });
-      }
 
-      testWithProvider(http, 'http');
-      testWithProvider(https, 'https');
+        it('rejects resulting promise if a error was provided', (done) => {
+          const err = new Error('Anythyng could go wrong');
+          result
+            .catch((e) => {
+              expect(e).to.eql(err);
+              done();
+            });
+
+          cb(err);
+        });
+
+        it('rejects resulting promise if no body was provided', (done) => {
+          result
+            .catch((err) => {
+              expect(err.message).to.match(/empty response/i);
+              done();
+            });
+
+          cb(null, null, null);
+        });
+
+        it('rejects resulting promise if body is unparsable', (done) => {
+          result
+            .catch((err) => {
+              expect(err.message).to.match(/failed to parse json/i);
+              done();
+            });
+
+          cb(null, null, 'non json');
+        });
+
+        it('rejects resulting promise if body contains `error` property', (done) => {
+          result
+            .catch((err) => {
+              expect(err.message).to.match(/error that happened/i);
+              done();
+            });
+
+          cb(null, null, '{"error": "Error that happened"}');
+        });
+
+        it('resolves to a value of parsed body', (done) => {
+          const fakeBody = { base: 'any', date: 'any', rates: { ANY: 134 } };
+
+          result
+            .then((res) => {
+              expect(res).to.eql(fakeBody);
+              done();
+            });
+
+          cb(null, null, JSON.stringify(fakeBody));
+        });
+      });
     });
 
     describe('#latest', () => {
