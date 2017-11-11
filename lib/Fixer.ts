@@ -19,7 +19,7 @@ export abstract class Fixer {
 
   constructor(opts: any = {}) {
     (<any>Object).assign(this, {
-      baseUrl: parseUrl(opts.baseUrl || 'http://api.fixer.io')
+      baseUrl: parseUrl(opts.baseUrl || 'https://api.fixer.io')
     });
   }
 
