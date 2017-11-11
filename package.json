@@ -7,6 +7,12 @@
   "repository": "git@github.com:svlapin/fixer-api.git",
   "author": "Sergey Lapin <sv0lapin@gmail.com>",
   "license": "MIT",
+  "keywords": [
+    "currency",
+    "convert",
+    "exchange",
+    "rates"
+  ],
   "scripts": {
     "prepublish": "yarn build",
     "build": "tsc",
