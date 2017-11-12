@@ -123,6 +123,14 @@ describe('NodeFixer', () => {
         });
       });
 
+      it(
+        'calls #request with /latest and default parameters',
+        () => {
+          fixer.latest();
+          expect(fixer.request).to.have.been.calledWithExactly('/latest', {});
+        }
+      );
+
       it('returns result #request returns', () => {
         expect(fixer.latest()).equal(fakeRequestResult);
       });
@@ -152,6 +160,15 @@ describe('NodeFixer', () => {
           symbols: fakeOpts.symbols
         });
       });
+
+      it(
+        'calls #request with /latest and default parameters',
+        () => {
+          const strDate = '2015-05-23';
+          fixer.forDate(strDate, {});
+          expect(fixer.request).to.have.been.calledWithExactly(`/${strDate}`, {});
+        }
+      );
 
       it('calls #request when date is Date instance', () => {
         const date = new Date(2015, 4, 25);

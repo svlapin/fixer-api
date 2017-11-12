@@ -13,6 +13,11 @@ export interface IFixerResponse {
   readonly error?: string;
 }
 
+export interface IReqOpts {
+  base?: string;
+  symbols?: string[];
+}
+
 export abstract class Fixer {
   baseUrl: string;
 
@@ -34,13 +39,24 @@ export abstract class Fixer {
       throw new Error('Invalid date argument');
     }
 
-    const { base, symbols } = opts;
-    return this.request(`/${formattedDate}`, { base, symbols });
+    return this.request(`/${formattedDate}`, this.filterOptions(opts));
   }
 
   latest(opts: any = {}) {
-    const { base, symbols } = opts;
-    return this.request('/latest', { base, symbols });
+    return this.request('/latest', this.filterOptions(opts));
+  }
+
+  private filterOptions(opts: any): IReqOpts {
+    const filteredOpts: IReqOpts = {};
+    if (opts.base) {
+      filteredOpts.base = opts.base;
+    }
+
+    if (opts.symbols) {
+      filteredOpts.symbols = opts.symbols;
+    }
+
+    return filteredOpts;
   }
 
   protected abstract request(url: string, opts: any): Promise<IFixerResponse>;
