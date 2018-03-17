@@ -55,6 +55,10 @@ export abstract class Fixer {
     if (opts.symbols) {
       filteredOpts.symbols = opts.symbols;
     }
+    
+    if (opts.access_key) {
+      filteredOpts.access_key = opts.access_key;
+    }
 
     return filteredOpts;
   }
