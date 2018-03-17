@@ -16,6 +16,7 @@ export interface IFixerResponse {
 export interface IReqOpts {
   base?: string;
   symbols?: string[];
+  access_key?: string;
 }
 
 export abstract class Fixer {
