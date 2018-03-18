@@ -157,7 +157,8 @@ describe('NodeFixer', () => {
 
         expect(fixer.request).to.have.been.calledWithExactly(`/${strDate}`, {
           base: fakeOpts.base,
-          symbols: fakeOpts.symbols
+          symbols: fakeOpts.symbols,
+          access_key: fakeOpts.access_key
         });
       });
 
