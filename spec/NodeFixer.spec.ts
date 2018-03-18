@@ -179,7 +179,8 @@ describe('NodeFixer', () => {
 
         expect(fixer.request).to.have.been.calledWithExactly('/2015-05-25', {
           base: fakeOpts.base,
-          symbols: fakeOpts.symbols
+          symbols: fakeOpts.symbols,
+          access_key: fakeOpts.access_key,
         });
       });
 
