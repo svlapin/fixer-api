@@ -112,6 +112,7 @@ describe('NodeFixer', () => {
         const fakeOpts = {
           base: 'USD',
           symbols: 'ANY',
+          access_key: 'any',
           nonexistent: {}
         };
 
@@ -119,7 +120,8 @@ describe('NodeFixer', () => {
 
         expect(fixer.request).to.have.been.calledWithExactly('/latest', {
           base: fakeOpts.base,
-          symbols: fakeOpts.symbols
+          symbols: fakeOpts.symbols,
+          access_key: fakeOpts.access_key
         });
       });
 
@@ -144,6 +146,7 @@ describe('NodeFixer', () => {
       const fakeOpts = {
         base: 'USD',
         symbols: 'ANY',
+        access_key: 'any',
         nonexistent: {}
       };
 
@@ -157,7 +160,8 @@ describe('NodeFixer', () => {
 
         expect(fixer.request).to.have.been.calledWithExactly(`/${strDate}`, {
           base: fakeOpts.base,
-          symbols: fakeOpts.symbols
+          symbols: fakeOpts.symbols,
+          access_key: fakeOpts.access_key
         });
       });
 
@@ -176,7 +180,8 @@ describe('NodeFixer', () => {
 
         expect(fixer.request).to.have.been.calledWithExactly('/2015-05-25', {
           base: fakeOpts.base,
-          symbols: fakeOpts.symbols
+          symbols: fakeOpts.symbols,
+          access_key: fakeOpts.access_key,
         });
       });
 
