@@ -112,6 +112,7 @@ describe('NodeFixer', () => {
         const fakeOpts = {
           base: 'USD',
           symbols: 'ANY',
+          access_key: 'any',
           nonexistent: {}
         };
 
@@ -144,6 +145,7 @@ describe('NodeFixer', () => {
       const fakeOpts = {
         base: 'USD',
         symbols: 'ANY',
+        access_key: 'any',
         nonexistent: {}
       };
 
