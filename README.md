@@ -90,3 +90,13 @@ or by providing `Date` instance:
 ```js
 fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'] })
 ```
+
+### API key
+
+API key can be specified within the parameters for both `forDate` and `latest` methods:
+
+```js
+fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'], access_key: <YOUR API KEY> })
+
+fixer.latest({ base: 'USD', symbols: ['CHF'], access_key: <YOUR API KEY> })
+```
