@@ -14,13 +14,17 @@ fixer.io client to fetch currency conversion rates written in Node.js.
 npm install fixer-api
 ```
 
+## API key
+
+To use fixer API, you must obtain an Access Key first [https://fixer.io/](https://fixer.io/).
+
 ## Usage
 
 ### To fetch latest data
 ```js
 const fixer = require('fixer-api');
 
-fixer.latest()
+fixer.latest({ access_key: <YOUR API KEY> })
   .then((data) => {
     console.log(data);
   });
@@ -69,7 +73,7 @@ fixer.latest()
 ### To fetch latest rates on specific base
 
 ```js
-fixer.latest({ base: 'USD', symbols: ['CHF'] })
+fixer.latest({ base: 'USD', symbols: ['CHF'], access_key: <YOUR API KEY> })
   .then((data) => {
     console.log(data);
   });
@@ -81,22 +85,12 @@ fixer.latest({ base: 'USD', symbols: ['CHF'] })
 ### To fetch rates for specific date
 
 ```js
-fixer.forDate('2015-04-01', { base: 'USD', symbols: ['CHF'] })
+fixer.forDate('2015-04-01', { base: 'USD', symbols: ['CHF'], access_key: <YOUR API KEY> })
   .then((data) => {
   ...
 ```
 
 or by providing `Date` instance:
 ```js
-fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'] })
-```
-
-### API key
-
-API key can be specified within the parameters for both `forDate` and `latest` methods:
-
-```js
 fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'], access_key: <YOUR API KEY> })
-
-fixer.latest({ base: 'USD', symbols: ['CHF'], access_key: <YOUR API KEY> })
 ```
