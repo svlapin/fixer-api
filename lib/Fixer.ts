@@ -10,7 +10,10 @@ export interface IFixerResponse {
   readonly base: string;
   readonly date: string;
   readonly rates: IFixerRates;
-  readonly error?: string;
+  readonly error?: {
+    type: string,
+    info: string
+  };
 }
 
 export interface IReqOpts {

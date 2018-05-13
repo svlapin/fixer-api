@@ -90,7 +90,7 @@ describe('NodeFixer', () => {
                 done();
               });
 
-            cb(null, null, '{"error": "Error that happened"}');
+            cb(null, null, '{"error": { "type": "any_type", "info": "Error that happened"}}');
           });
 
           it('resolves to a value of parsed body', (done) => {

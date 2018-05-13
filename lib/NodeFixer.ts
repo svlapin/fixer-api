@@ -32,7 +32,7 @@ class NodeFixer extends Fixer {
         }
 
         if (parsedBody.error) {
-          reject(new Error(parsedBody.error));
+          reject(new Error(`${parsedBody.error.type}: ${parsedBody.error.info}`));
           return;
         }
 
