@@ -27,7 +27,7 @@ export abstract class Fixer {
 
   constructor(opts: any = {}) {
     (<any>Object).assign(this, {
-      baseUrl: opts.baseUrl || 'https://api.fixer.io'
+      baseUrl: opts.baseUrl || 'http://data.fixer.io/api'
     });
   }
 
