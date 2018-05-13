@@ -6,6 +6,10 @@ import { Fixer, IFixerResponse } from './Fixer';
 
 class NodeFixer extends Fixer {
   request(path: string, opts: any): Promise<IFixerResponse> {
+    if (!opts.access_key) {
+      return Promise.reject(new Error('access_key is required to use fixer'));
+    }
+
     return new Promise((resolve, reject) => {
       get(`${this.baseUrl}${path}?${stringify(opts)}`, (err, resp, body) => {
         if (err) {

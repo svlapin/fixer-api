@@ -23,78 +23,87 @@ describe('NodeFixer', () => {
 
     describe('#request', () => {
       const fakePath = '/any';
-      const fakeOpts = { anyKey: 'anyVal' };
 
       let result: Promise<IFixerResponse>;
 
-      beforeEach(() => {
-        sandbox.stub(request, 'get');
-
-        result = fixer.request(fakePath, fakeOpts);
+      it('returns a rejected promise if no access_key specified', (done) => {
+        fixer.request(fakePath, {})
+        .catch((err) => {
+          expect(err.message).to.include('access_key');
+          done();
+        });
       });
 
-      it('calls request#get', () => {
-        expect(request.get).to.have.been.called;
-      });
-
-      describe('callback provided', () => {
-        let cb: any;
-
+      describe('when access_key is specified', () => {
+        const fakeOpts = { anyKey: 'anyVal', access_key: 'any' };
         beforeEach(() => {
-          cb = (<sinon.SinonStub>request.get).getCall(0).args[1];
+          sandbox.stub(request, 'get');
+          result = fixer.request(fakePath, fakeOpts);
         });
 
-        it('rejects resulting promise if a error was provided', (done) => {
-          const err = new Error('Anythyng could go wrong');
-          result
-            .catch((e) => {
-              expect(e).to.eql(err);
-              done();
-            });
-
-          cb(err);
+        it('calls request#get', () => {
+          expect(request.get).to.have.been.called;
         });
 
-        it('rejects resulting promise if no body was provided', (done) => {
-          result
-            .catch((err) => {
-              expect(err.message).to.match(/empty response/i);
-              done();
-            });
+        describe('callback provided', () => {
+          let cb: any;
 
-          cb(null, null, null);
-        });
+          beforeEach(() => {
+            cb = (<sinon.SinonStub>request.get).getCall(0).args[1];
+          });
 
-        it('rejects resulting promise if body is unparsable', (done) => {
-          result
-            .catch((err) => {
-              expect(err.message).to.match(/failed to parse json/i);
-              done();
-            });
+          it('rejects resulting promise if a error was provided', (done) => {
+            const err = new Error('Anything could go wrong');
+            result
+              .catch((e) => {
+                expect(e).to.eql(err);
+                done();
+              });
 
-          cb(null, null, 'non json');
-        });
+            cb(err);
+          });
 
-        it('rejects resulting promise if body contains `error` property', (done) => {
-          result
-            .catch((err) => {
-              expect(err.message).to.match(/error that happened/i);
-              done();
-            });
+          it('rejects resulting promise if no body was provided', (done) => {
+            result
+              .catch((err) => {
+                expect(err.message).to.match(/empty response/i);
+                done();
+              });
 
-          cb(null, null, '{"error": "Error that happened"}');
-        });
+            cb(null, null, null);
+          });
 
-        it('resolves to a value of parsed body', (done) => {
-          const fakeBody = { base: 'any', date: 'any', rates: { ANY: 134 } };
+          it('rejects resulting promise if body is unparsable', (done) => {
+            result
+              .catch((err) => {
+                expect(err.message).to.match(/failed to parse json/i);
+                done();
+              });
 
-          result
-            .then((res) => {
-              expect(res).to.eql(fakeBody);
-              done();
-            });
+            cb(null, null, 'non json');
+          });
 
-          cb(null, null, JSON.stringify(fakeBody));
+          it('rejects resulting promise if body contains `error` property', (done) => {
+            result
+              .catch((err) => {
+                expect(err.message).to.match(/error that happened/i);
+                done();
+              });
+
+            cb(null, null, '{"error": "Error that happened"}');
+          });
+
+          it('resolves to a value of parsed body', (done) => {
+            const fakeBody = { base: 'any', date: 'any', rates: { ANY: 134 } };
+
+            result
+              .then((res) => {
+                expect(res).to.eql(fakeBody);
+                done();
+              });
+
+            cb(null, null, JSON.stringify(fakeBody));
+          });
         });
       });
     });
