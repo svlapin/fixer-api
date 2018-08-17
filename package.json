@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "prepublish": "yarn build",
-    "build": "tsc",
+    "build": "tsc -d",
     "test": "mocha --recursive --compilers ts:ts-node/register spec/",
     "test:coverage": "nyc npm test",
     "test:coverage:upload": "codecov --token=e73b8b4f-4600-4c55-94d0-d949114eb73d",
