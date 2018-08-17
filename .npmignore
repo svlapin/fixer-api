@@ -1,0 +1,7 @@
+spec
+lib
+.travis.yml
+codecov.yml
+index.ts
+tsconfig.json
+tslint.json
