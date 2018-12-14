@@ -26,12 +26,10 @@ export abstract class Fixer {
   baseUrl: string;
 
   constructor(opts: any = {}) {
-    (<any>Object).assign(this, {
-      baseUrl: opts.baseUrl || 'http://data.fixer.io/api'
-    });
+    this.baseUrl = opts.baseUrl || 'http://data.fixer.io/api';
   }
 
-  forDate(date: any, opts: any = {}) {
+  async forDate(date: any, opts: any = {}) {
     let formattedDate;
 
     const RE_DATE = /^\d{4}-\d{2}-\d{2}$/;

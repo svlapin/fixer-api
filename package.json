@@ -26,49 +26,25 @@
     "prepublishOnly": "npm run build",
     "build": "tsc -d",
     "prebuild": "rm -rf dist",
-    "test": "mocha --recursive --compilers ts:ts-node/register spec/",
-    "test:coverage": "nyc npm test",
+    "test": "jest",
     "test:coverage:upload": "codecov --token=e73b8b4f-4600-4c55-94d0-d949114eb73d",
     "tslint": "tslint lib/**/*.ts"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.1",
+    "@types/jest": "^23.3.10",
     "@types/mocha": "^2.2.41",
     "@types/moment": "^2.13.0",
     "@types/request": "^2.0.8",
-    "@types/sinon": "^2.3.3",
-    "@types/sinon-chai": "^2.7.28",
-    "chai": "^4.1.0",
     "codecov": "^1.0.1",
-    "mocha": "^3.4.2",
-    "nyc": "^11.0.3",
-    "sinon": "^2.4.1",
-    "sinon-chai": "^2.12.0",
-    "ts-node": "^3.2.1",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
     "tslint": "^5.5.0",
     "tslint-config-airbnb": "^5.2.1",
-    "typescript": "^2.4.2"
+    "typescript": "^3.2.2"
   },
   "dependencies": {
     "moment": "^2.17.1",
     "request": "^2.83.0"
-  },
-  "nyc": {
-    "include": [
-      "lib/**/*.ts"
-    ],
-    "exclude": [
-      "typings"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "reporter": [
-      "lcov",
-      "json",
-      "html"
-    ],
-    "all": true
   },
   "homepage": "https://github.com/svlapin/fixer-api#readme"
 }
