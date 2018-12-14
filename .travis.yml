@@ -4,9 +4,9 @@ node_js:
   - "4"
 
 script:
-  - yarn run tslint
-  - yarn test
+  - npm run tslint
+  - npm test
 
 after_success:
-  - yarn test:coverage
-  - yarn test:coverage:upload
+  - npm run test:coverage
+  - npm run test:coverage:upload

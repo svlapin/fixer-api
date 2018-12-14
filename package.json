@@ -23,7 +23,7 @@
     "rates"
   ],
   "scripts": {
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "npm run build",
     "build": "tsc -d",
     "prebuild": "rm -rf dist",
     "test": "mocha --recursive --compilers ts:ts-node/register spec/",
