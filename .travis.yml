@@ -1,12 +1,12 @@
 language: node_js
 node_js:
   - "6"
-  - "4"
+  - "8"
+  - "10"
 
 script:
-  - yarn run tslint
-  - yarn test
+  - npm run tslint
+  - npm test
 
 after_success:
-  - yarn test:coverage
-  - yarn test:coverage:upload
+  - npm run test:coverage:upload
