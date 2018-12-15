@@ -28,7 +28,7 @@
     "prebuild": "rimraf ./dist",
     "test": "jest",
     "test:coverage:upload": "codecov --token=e73b8b4f-4600-4c55-94d0-d949114eb73d",
-    "tslint": "tslint lib/**/*.ts"
+    "tslint": "tslint src/**/*.ts"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",

@@ -4,7 +4,7 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: "./coverage/",
   roots: [
-    "<rootDir>/lib"
+    "<rootDir>/src"
   ],
   transform: {
     "^.+\\.ts$": "ts-jest"
