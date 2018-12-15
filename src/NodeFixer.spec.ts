@@ -70,7 +70,7 @@ describe('NodeFixer', () => {
     (request.get as jest.Mock)
       .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
 
-    const result = await fixer.latest({ access_key: '123456', base: 'USD', symbols: ['AUD'] });
+    const result = await fixer.latest({ access_key: '123456' });
 
     expect(result).toEqual(mockResponse);
   });
@@ -141,5 +141,66 @@ describe('NodeFixer', () => {
       .rejects.toThrow('access_key is required to use fixer');
     await expect(newFixer.latest())
       .rejects.toThrow('access_key is required to use fixer');
+  });
+
+  describe('when initialized with params object', () => {
+    let fixerWithParams: NodeFixer;
+
+    beforeEach(() => {
+      fixerWithParams = new NodeFixer({ accessKey: '1234' });
+    });
+
+    it('fetches latest data', async () => {
+      const mockResponse = {
+        success: true,
+        timestamp: 1519296206,
+        base: 'USD',
+        date: '2018-12-14',
+        rates: {
+          AUD: 1.566015
+        }
+      };
+
+      (request.get as jest.Mock)
+        .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+
+      const result = await fixerWithParams.latest({ base: 'USD', symbols: ['AUD'] });
+
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
+  describe('#set', () => {
+    it('allows to set accessKey with chaining', async () => {
+      fixer
+        .set()
+        .set({ baseUrl: 'any' })
+        .set({ accessKey: '1234' })
+        .set({ accessKey: '12345' });
+    });
+
+    it('fetches latest data after accessKey was set with chaining', async () => {
+      fixer
+        .set({ accessKey: '1234' })
+        .set({ accessKey: '12345' })
+        .set();
+
+      const mockResponse = {
+        success: true,
+        timestamp: 1519296206,
+        base: 'USD',
+        date: '2018-12-14',
+        rates: {
+          AUD: 1.566015
+        }
+      };
+
+      (request.get as jest.Mock)
+        .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+
+      const result = await fixer.latest();
+
+      expect(result).toEqual(mockResponse);
+    });
   });
 });

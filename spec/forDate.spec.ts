@@ -43,4 +43,23 @@ describe('#forDate', () => {
       timestamp: expect.any(Number)
     });
   });
+
+  describe('default instance updated with accessKey', () => {
+    it('should get latest data', async () => {
+      fixer.set({ accessKey });
+      const result = await fixer.latest();
+
+      expect(result).toMatchObject({
+        base: 'EUR',
+        date: moment.utc().format('YYYY-MM-DD'),
+        rates: expect.objectContaining({
+          USD: expect.any(Number),
+          EUR: 1,
+          GBP: expect.any(Number)
+        }),
+        success: true,
+        timestamp: expect.any(Number)
+      });
+    });
+  });
 });

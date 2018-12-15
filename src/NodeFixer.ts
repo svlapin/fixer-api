@@ -2,16 +2,12 @@
 
 import { get } from 'request';
 import { stringify } from 'querystring';
-import { Fixer, IFixerResponse } from './Fixer';
+import { Fixer, IFixerResponse, IRequestOptions } from './Fixer';
 
 class NodeFixer extends Fixer {
-  request(path: string, opts: any): Promise<IFixerResponse> {
-    if (!opts.access_key) {
-      return Promise.reject(new Error('access_key is required to use fixer'));
-    }
-
+  request(path: string, opts: IRequestOptions): Promise<IFixerResponse> {
     return new Promise((resolve, reject) => {
-      get(`${this.baseUrl}${path}?${stringify(opts)}`, (err, resp, body) => {
+      get(`${this.basicOptions.baseUrl}${path}?${stringify(opts)}`, (err, resp, body) => {
         if (err) {
           reject(err);
           return;
