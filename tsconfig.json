@@ -4,7 +4,7 @@
     "lib": [
       "es2015"
     ],
-    "rootDir": ".",
+    "rootDir": "./src",
     "outDir": "./dist",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -17,7 +17,7 @@
     ]
   },
   "include": [
-    "./**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules"

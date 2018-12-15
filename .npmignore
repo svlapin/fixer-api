@@ -1,5 +1,5 @@
 spec
-lib/
+src/
 .travis.yml
 codecov.yml
 index.ts

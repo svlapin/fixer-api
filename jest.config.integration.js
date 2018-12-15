@@ -1,10 +1,8 @@
 'use strict';
 
 module.exports = {
-  collectCoverage: true,
-  coverageDirectory: './coverage/',
   roots: [
-    '<rootDir>/src'
+    '<rootDir>/spec'
   ],
   transform: {
     '^.+\\.ts$': 'ts-jest'

@@ -25,21 +25,22 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "tsc -d",
-    "prebuild": "rm -rf dist",
+    "prebuild": "rimraf ./dist",
     "test": "jest",
+    "test:integration": "jest -c jest.config.integration.js",
     "test:coverage:upload": "codecov --token=e73b8b4f-4600-4c55-94d0-d949114eb73d",
-    "tslint": "tslint lib/**/*.ts"
+    "tslint": "tslint src/**/*.ts"
   },
   "devDependencies": {
     "@types/jest": "^23.3.10",
-    "@types/mocha": "^2.2.41",
     "@types/moment": "^2.13.0",
-    "@types/request": "^2.0.8",
+    "@types/request": "^2.48.1",
     "codecov": "^3.1.0",
     "jest": "^23.6.0",
+    "rimraf": "^2.6.2",
     "ts-jest": "^23.10.5",
-    "tslint": "^5.5.0",
-    "tslint-config-airbnb": "^5.2.1",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.1",
     "typescript": "^3.2.2"
   },
   "dependencies": {
