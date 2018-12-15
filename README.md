@@ -6,28 +6,29 @@
 
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
 
-## Install
+## Features
 
-fixer.io client to fetch currency conversion rates written in Node.js.
-
-```sh
-npm install fixer-api
-```
+* promise or async / await based
+* extensively tested with unit and integration tests.
 
 ## API key
 
 To use fixer API, you must obtain an Access Key first [https://fixer.io/](https://fixer.io/).
 
+## Install
+
+```sh
+npm install fixer-api
+```
+
 ## Usage
 
-### To fetch latest data
+### Fetching latest data
 ```js
 const fixer = require('fixer-api');
 
-fixer.latest({ access_key: <YOUR API KEY> })
-  .then((data) => {
-    console.log(data);
-  });
+const data = await fixer.latest({ access_key: '<YOUR API KEY>' });
+console.log(data);
 
 /*
 {
@@ -70,27 +71,42 @@ fixer.latest({ access_key: <YOUR API KEY> })
 /*
 ```
 
-### To fetch latest rates on specific base
+### Fetch latest data based on specific base currency
 
 ```js
-fixer.latest({ base: 'USD', symbols: ['CHF'], access_key: <YOUR API KEY> })
-  .then((data) => {
-    console.log(data);
-  });
+const data = await fixer.latest({ base: 'USD', symbols: ['CHF'], access_key: '<YOUR API KEY>' });
+console.log(data);
+
 /*
 { base: 'USD', date: '2017-01-30', rates: { CHF: 1.0037 } }
 */
 ```
 
-### To fetch rates for specific date
+### Fetching historical data
 
 ```js
-fixer.forDate('2015-04-01', { base: 'USD', symbols: ['CHF'], access_key: <YOUR API KEY> })
-  .then((data) => {
-  ...
+const data = await fixer.forDate('2015-04-01', { base: 'USD', symbols: ['CHF'], access_key: '<YOUR API KEY>' });
 ```
 
 or by providing `Date` instance:
 ```js
-fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'], access_key: <YOUR API KEY> })
+const data = await fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'], access_key: '<YOUR API KEY>' });
+```
+
+## Running tests
+
+### Unit tests
+
+Unit tests run in isolation and don't send real requests to `fixer.io`.
+
+```sh
+npm test
+```
+
+### Integration tests
+
+Integration tests send real requests to `fixer.io` and so require valid access key.
+
+```sh
+FIXER_API_KEY="<YOUR_FIXER_KEY_HERE>" npm run test:integration
 ```

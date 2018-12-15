@@ -27,6 +27,7 @@
     "build": "tsc -d",
     "prebuild": "rimraf ./dist",
     "test": "jest",
+    "test:integration": "jest -c jest.config.integration.js",
     "test:coverage:upload": "codecov --token=e73b8b4f-4600-4c55-94d0-d949114eb73d",
     "tslint": "tslint src/**/*.ts"
   },
