@@ -23,10 +23,33 @@ npm install fixer-api
 
 ## Usage
 
-### Fetching latest data
+### Import default fixer instance
+
 ```js
 const fixer = require('fixer-api');
+```
 
+### Set `accessKey` obtained from fixer.io
+
+```js
+fixer.set({ accessKey: '<YOUR API KEY>' })
+```
+
+`.set` supports chaining, so you can run a query right after, e.g.:
+```js
+await fixer
+  .set({ accessKey: '<YOUR API KEY>' })
+  .latest();
+```
+
+### Fetch the latest data with `.latest`
+```js
+const data = await fixer.latest();
+console.log(data);
+
+/**
+ *  or, if you want to specify access key per request (note it's in snake_case here)
+ */
 const data = await fixer.latest({ access_key: '<YOUR API KEY>' });
 console.log(data);
 
@@ -74,7 +97,7 @@ console.log(data);
 ### Fetch latest data based on specific base currency
 
 ```js
-const data = await fixer.latest({ base: 'USD', symbols: ['CHF'], access_key: '<YOUR API KEY>' });
+const data = await fixer.latest({ base: 'USD', symbols: ['CHF'] });
 console.log(data);
 
 /*
@@ -82,15 +105,26 @@ console.log(data);
 */
 ```
 
-### Fetching historical data
+### Fetching historical data with `.forDate`
 
 ```js
-const data = await fixer.forDate('2015-04-01', { base: 'USD', symbols: ['CHF'], access_key: '<YOUR API KEY>' });
+const data = await fixer.forDate('2015-04-01', { base: 'USD', symbols: ['CHF'] });
+
+/**
+ *  or, if you want to specify access key per request (note it's in snake_case here)
+ */
+const data = await fixer.forDate('2015-04-01', {
+  access_key: '<YOUR API KEY>', ]
+  base: 'USD',
+  symbols: ['CHF']
+});
+console.log(data);
+
 ```
 
 or by providing `Date` instance:
 ```js
-const data = await fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'], access_key: '<YOUR API KEY>' });
+const data = await fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'] });
 ```
 
 ## Running tests
