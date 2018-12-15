@@ -16,20 +16,34 @@ export interface IFixerResponse {
   };
 }
 
-export interface IReqOpts {
+export interface IRequestOptions {
   base?: string;
   symbols?: string[];
-  access_key?: string;
+  access_key: string;
+}
+
+export interface IBasicOptions {
+  baseUrl: string;
+  accessKey?: string;
 }
 
 export abstract class Fixer {
-  baseUrl: string;
+  protected basicOptions: IBasicOptions;
 
-  constructor(opts: any = {}) {
-    this.baseUrl = opts.baseUrl || 'http://data.fixer.io/api';
+  constructor(opts: Partial<IBasicOptions> = {}) {
+    this.basicOptions = {
+      baseUrl: opts.baseUrl || 'http://data.fixer.io/api',
+      accessKey: opts.accessKey
+    };
   }
 
-  async forDate(date: any, opts: any = {}) {
+  set({ baseUrl, accessKey }: Partial<IBasicOptions> = {}): Fixer {
+    this.basicOptions.baseUrl = baseUrl || this.basicOptions.baseUrl;
+    this.basicOptions.accessKey = accessKey || this.basicOptions.accessKey;
+    return this;
+  }
+
+  async forDate(date: Date | string, opts?: Partial<IRequestOptions>): Promise<IFixerResponse> {
     let formattedDate;
 
     const RE_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -44,25 +58,24 @@ export abstract class Fixer {
     return this.request(`/${formattedDate}`, this.filterOptions(opts));
   }
 
-  latest(opts: any = {}) {
+  async latest(opts?: Partial<IRequestOptions>): Promise<IFixerResponse> {
     return this.request('/latest', this.filterOptions(opts));
   }
 
-  private filterOptions(opts: any): IReqOpts {
-    const filteredOpts: IReqOpts = {};
-    if (opts.base) {
-      filteredOpts.base = opts.base;
+  private filterOptions(
+    { base, symbols, access_key: accessKey }: Partial<IRequestOptions> = {}
+  ): IRequestOptions {
+    const maybeAccessKey = accessKey || this.basicOptions.accessKey;
+
+    if (!maybeAccessKey) {
+      throw new Error('access_key is required to use fixer');
     }
 
-    if (opts.symbols) {
-      filteredOpts.symbols = opts.symbols;
-    }
-
-    if (opts.access_key) {
-      filteredOpts.access_key = opts.access_key;
-    }
-
-    return filteredOpts;
+    return {
+      ...(base ? { base } : {}),
+      ...(symbols ? { symbols } : {}),
+      access_key: maybeAccessKey
+    };
   }
 
   protected abstract request(url: string, opts: any): Promise<IFixerResponse>;
