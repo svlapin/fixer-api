@@ -43,7 +43,7 @@ export abstract class Fixer {
     return this;
   }
 
-  async forDate(date: Date | string, opts?: Partial<IRequestOptions>): Promise<IFixerResponse> {
+  async forDate(date: Date | string, opts: Partial<IRequestOptions> = {}): Promise<IFixerResponse> {
     let formattedDate;
 
     const RE_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -55,27 +55,29 @@ export abstract class Fixer {
       throw new Error('Invalid date argument');
     }
 
-    return this.request(`/${formattedDate}`, this.filterOptions(opts));
-  }
+    const accessKey = opts.access_key || this.basicOptions.accessKey;
 
-  async latest(opts?: Partial<IRequestOptions>): Promise<IFixerResponse> {
-    return this.request('/latest', this.filterOptions(opts));
-  }
-
-  private filterOptions(
-    { base, symbols, access_key: accessKey }: Partial<IRequestOptions> = {}
-  ): IRequestOptions {
-    const maybeAccessKey = accessKey || this.basicOptions.accessKey;
-
-    if (!maybeAccessKey) {
+    if (!accessKey) {
       throw new Error('access_key is required to use fixer');
     }
 
-    return {
-      ...(base ? { base } : {}),
-      ...(symbols ? { symbols } : {}),
-      access_key: maybeAccessKey
-    };
+    return this.request(`/${formattedDate}`, {
+      ...opts,
+      access_key: accessKey
+    });
+  }
+
+  async latest(opts: Partial<IRequestOptions> = {}): Promise<IFixerResponse> {
+    const accessKey = opts.access_key || this.basicOptions.accessKey;
+
+    if (!accessKey) {
+      throw new Error('access_key is required to use fixer');
+    }
+
+    return this.request('/latest', {
+      ...opts,
+      access_key: accessKey
+    });
   }
 
   protected abstract request(url: string, opts: any): Promise<IFixerResponse>;

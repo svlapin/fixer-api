@@ -2,10 +2,10 @@
 
 import { get } from 'request';
 import { stringify } from 'querystring';
-import { Fixer, IFixerResponse, IRequestOptions } from './Fixer';
+import { Fixer, IFixerResponse } from './Fixer';
 
 class NodeFixer extends Fixer {
-  request(path: string, opts: IRequestOptions): Promise<IFixerResponse> {
+  request(path: string, opts: {} | undefined): Promise<IFixerResponse> {
     return new Promise((resolve, reject) => {
       get(`${this.basicOptions.baseUrl}${path}?${stringify(opts)}`, (err, resp, body) => {
         if (err) {
