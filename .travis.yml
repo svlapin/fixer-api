@@ -5,6 +5,7 @@ node_js:
   - "10"
 
 script:
+  - npm run security-check
   - npm run tslint
   - npm test
   - npm run build && npm run test:integration
