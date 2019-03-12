@@ -31,14 +31,15 @@ describe('#latest', () => {
       const result = await fixer.latest({
         access_key: accessKey,
         base: 'EUR',
-        symbols: ['USD']
+        symbols: ['USD', 'AUD']
       });
 
       expect(result).toMatchObject({
         base: 'EUR',
         date: moment.utc().format('YYYY-MM-DD'),
         rates: expect.objectContaining({
-          USD: expect.any(Number)
+          USD: expect.any(Number),
+          AUD: expect.any(Number)
         }),
         success: true,
         timestamp: expect.any(Number)

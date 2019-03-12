@@ -27,6 +27,11 @@ export interface IBasicOptions {
   accessKey?: string;
 }
 
+const withSerializedSymbols = ({ symbols, ...restOptions }: Partial<IRequestOptions>) => ({
+  ...restOptions,
+  ...(symbols ? { symbols: symbols instanceof Array ? symbols.join(',') : symbols } : {})
+});
+
 export abstract class Fixer {
   protected basicOptions: IBasicOptions;
 
@@ -62,7 +67,7 @@ export abstract class Fixer {
     }
 
     return this.request(`/${formattedDate}`, {
-      ...opts,
+      ...withSerializedSymbols(opts),
       access_key: accessKey
     });
   }
@@ -75,7 +80,7 @@ export abstract class Fixer {
     }
 
     return this.request('/latest', {
-      ...opts,
+      ...withSerializedSymbols(opts),
       access_key: accessKey
     });
   }
