@@ -12,6 +12,10 @@ describe('NodeFixer', () => {
     fixer = new NodeFixer();
   });
 
+  afterEach(() => {
+    (request.get as jest.Mock).mockClear();
+  });
+
   it('throws if no access key provided', async () => {
     await expect(fixer.latest({ base: 'USD', symbols: ['AUD'] }))
       .rejects.toThrow('access_key is required to use fixer');
@@ -73,6 +77,52 @@ describe('NodeFixer', () => {
     const result = await fixer.latest({ access_key: '123456' });
 
     expect(result).toEqual(mockResponse);
+  });
+
+  it('serializes symbols parameter', async () => {
+    const mockResponse = {
+      success: true,
+      timestamp: 1519296206,
+      base: 'USD',
+      date: '2018-12-14',
+      rates: {
+        AUD: 1.566015
+      }
+    };
+
+    (request.get as jest.Mock)
+      .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+
+    await fixer.latest({ access_key: '123456', symbols: ['AUD', 'USD'] });
+
+    expect(request.get)
+      .toBeCalledWith(
+        'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD',
+        expect.any(Function)
+      );
+  });
+
+  it('allows providing symbols parameter as a string', async () => {
+    const mockResponse = {
+      success: true,
+      timestamp: 1519296206,
+      base: 'USD',
+      date: '2018-12-14',
+      rates: {
+        AUD: 1.566015
+      }
+    };
+
+    (request.get as jest.Mock)
+      .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+
+    await fixer.latest({ access_key: '123456', symbols: 'AUD,USD' } as any);
+
+    expect(request.get)
+      .toBeCalledWith(
+        'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD',
+        expect.any(Function)
+      );
   });
 
   it('fetches forDate', async () => {
