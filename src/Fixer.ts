@@ -1,6 +1,5 @@
-'use strict';
-
 import * as moment from 'moment';
+import { DEFAULT_URL } from './constants';
 
 export interface IFixerRates {
   readonly [currency: string]: number;
@@ -10,12 +9,34 @@ export interface IFixerResponse {
   readonly base: string;
   readonly date: string;
   readonly rates: IFixerRates;
+  readonly timestamp: number;
   readonly error?: {
     type: string,
     info: string
   };
 }
 
+export interface IFixerConvertRequestOptions {
+  readonly from: string;
+  readonly to: string;
+  readonly amount: number;
+  readonly date?: string;
+}
+
+export interface IFixerConvertResponse {
+  readonly success: boolean;
+  readonly query: {
+    readonly from: string;
+    readonly to: string;
+    readonly amount: number
+  };
+  readonly date: string;
+  readonly result: number;
+}
+
+export interface IRawParams {
+  [key: string]: any;
+}
 export interface IRequestOptions {
   base?: string;
   symbols?: string[];
@@ -37,7 +58,7 @@ export abstract class Fixer {
 
   constructor(opts: Partial<IBasicOptions> = {}) {
     this.basicOptions = {
-      baseUrl: opts.baseUrl || 'http://data.fixer.io/api',
+      baseUrl: opts.baseUrl || DEFAULT_URL,
       accessKey: opts.accessKey
     };
   }
@@ -60,30 +81,22 @@ export abstract class Fixer {
       throw new Error('Invalid date argument');
     }
 
-    const accessKey = opts.access_key || this.basicOptions.accessKey;
-
-    if (!accessKey) {
-      throw new Error('access_key is required to use fixer');
-    }
-
-    return this.request(`/${formattedDate}`, {
-      ...withSerializedSymbols(opts),
-      access_key: accessKey
-    });
+    return this.request<IFixerResponse>(`/${formattedDate}`, withSerializedSymbols(opts));
   }
 
   async latest(opts: Partial<IRequestOptions> = {}): Promise<IFixerResponse> {
-    const accessKey = opts.access_key || this.basicOptions.accessKey;
+    return this.request<IFixerResponse>('/latest', withSerializedSymbols(opts));
+  }
 
-    if (!accessKey) {
-      throw new Error('access_key is required to use fixer');
-    }
-
-    return this.request('/latest', {
-      ...withSerializedSymbols(opts),
-      access_key: accessKey
+  async convert(from: string, to: string, amount: number, date?: Date | string):
+    Promise<IFixerConvertResponse> {
+    return this.request<IFixerConvertResponse>('/convert', {
+      from,
+      to,
+      amount,
+      date
     });
   }
 
-  protected abstract request(url: string, opts: any): Promise<IFixerResponse>;
+  protected abstract request<Result>(url: string, opts: IRawParams): Promise<Result>;
 }

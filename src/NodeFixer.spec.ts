@@ -1,9 +1,14 @@
 import NodeFixer from './NodeFixer';
 import * as request from 'request';
+import { DEFAULT_URL } from './constants';
 
 import 'jest';
 
 jest.mock('request');
+
+beforeEach(() => {
+  jest.resetAllMocks();
+});
 
 describe('NodeFixer', () => {
   let fixer: NodeFixer;
@@ -250,6 +255,34 @@ describe('NodeFixer', () => {
 
       const result = await fixer.latest();
 
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
+  describe('#convert', () => {
+    let fixerWithParams: NodeFixer;
+
+    beforeEach(() => {
+      fixerWithParams = new NodeFixer({ accessKey: '1234' });
+    });
+
+    it('sends /convert request', async () => {
+      const mockResponse = {
+        success: true,
+        date: '2018-12-14',
+        result: 12.5
+      };
+
+      (request.get as jest.Mock)
+        .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+
+      const result = await fixerWithParams.convert('EUR', 'USD', 10);
+
+      expect(request.get)
+        .toBeCalledWith(
+          `${DEFAULT_URL}/convert?access_key=1234&from=EUR&to=USD&amount=10`,
+          expect.any(Function)
+        );
       expect(result).toEqual(mockResponse);
     });
   });

@@ -3,7 +3,6 @@ import * as moment from 'moment';
 import 'jest';
 
 const fixer = require('../dist');
-const { Fixer } = require('../dist');
 
 const accessKey = process.env.FIXER_API_KEY;
 

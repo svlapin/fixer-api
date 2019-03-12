@@ -1,39 +1,57 @@
-'use strict';
-
 import { get } from 'request';
 import { stringify } from 'querystring';
-import { Fixer, IFixerResponse } from './Fixer';
+import { Fixer, IRawParams } from './Fixer';
 
 class NodeFixer extends Fixer {
-  request(path: string, opts: {} | undefined): Promise<IFixerResponse> {
+  async request<Result>(path: string, opts: IRawParams): Promise<Result> {
+    const accessKey = opts.access_key || this.basicOptions.accessKey;
+
+    if (!accessKey) {
+      throw new Error('access_key is required to use fixer');
+    }
+
     return new Promise((resolve, reject) => {
-      get(`${this.basicOptions.baseUrl}${path}?${stringify(opts)}`, (err, resp, body) => {
-        if (err) {
-          reject(err);
-          return;
+      const filteredOptions = Object.entries(opts)
+      .reduce(
+        (acc, [key, value]) => ({
+          ...acc,
+          ...(value ? { [key]: value } : {})
+        }),
+        {
+          access_key: accessKey
         }
+      );
 
-        if (!body) {
-          reject(new Error('Empty response body'));
-          return;
+      get(
+        `${this.basicOptions.baseUrl}${path}?${stringify(filteredOptions)}`,
+        (err, resp, body) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          if (!body) {
+            reject(new Error('Empty response body'));
+            return;
+          }
+
+          let parsedBody;
+
+          try {
+            parsedBody = JSON.parse(body);
+          } catch (e) {
+            reject(new Error('Failed to parse JSON body'));
+            return;
+          }
+
+          if (parsedBody.error) {
+            reject(new Error(`${parsedBody.error.type}: ${parsedBody.error.info}`));
+            return;
+          }
+
+          resolve(parsedBody as Result);
         }
-
-        let parsedBody: IFixerResponse;
-
-        try {
-          parsedBody = JSON.parse(body);
-        } catch (e) {
-          reject(new Error('Failed to parse JSON body'));
-          return;
-        }
-
-        if (parsedBody.error) {
-          reject(new Error(`${parsedBody.error.type}: ${parsedBody.error.info}`));
-          return;
-        }
-
-        resolve(parsedBody);
-      });
+      );
     });
   }
 }
