@@ -6,6 +6,8 @@
 
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
 
+[![Known Vulnerabilities](https://snyk.io/test/github/svlapin/fixer-api/badge.svg)](https://snyk.io/test/github/svlapin/fixer-api)
+
 ## Features
 
 * promise or async / await based
