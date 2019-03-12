@@ -1,5 +1,7 @@
 import * as moment from 'moment';
 
+import 'jest';
+
 const fixer = require('../dist');
 const { Fixer } = require('../dist');
 
