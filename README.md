@@ -27,7 +27,7 @@ npm install fixer-api
 
 * [Latest](#fetch-the-latest-data-with-latest)
 * [Historical](#fetching-historical-data-with-fordate)
-* [Conversion](#Doing-currency-conversion-with-convert)
+* [Conversion](#doing-currency-conversion--with-convert)
 ### Import default fixer instance
 
 ```js
