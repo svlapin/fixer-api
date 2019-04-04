@@ -25,6 +25,9 @@ npm install fixer-api
 
 ## Usage
 
+* [Latest](#fetch-the-latest-data-with-latest)
+* [Historical](#fetching-historical-data-with-fordate)
+* [Conversion](#Doing-currency-conversion-with-convert)
 ### Import default fixer instance
 
 ```js
@@ -127,6 +130,35 @@ console.log(data);
 or by providing `Date` instance:
 ```js
 const data = await fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'] });
+```
+
+### Doing currency conversion  with `.convert`
+
+Keep in mind that `.convert` requires a [paid fixer plan](https://fixer.io/product).
+
+```
+fixer.convert(<from>, <to>, <amount>, <date? = current date>)
+```
+
+```js
+const data = await fixer.convert('GBP', 'JPY', 25, "2018-02-22");
+console.log(data);
+
+/*
+  success: true,
+  query: {
+    from: "GBP",
+    to: "JPY",
+    amount: 25
+  },
+  info: {
+    timestamp: 1519328414,
+    rate: 148.972231
+  },
+  date: "2018-02-22"
+  result: 3724.305775
+*/
+
 ```
 
 ## Running tests
