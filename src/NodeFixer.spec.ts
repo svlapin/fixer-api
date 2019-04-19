@@ -1,10 +1,21 @@
 import NodeFixer from './NodeFixer';
-import * as request from 'request';
+import nodeFetch from 'node-fetch';
 import { DEFAULT_URL } from './constants';
 
 import 'jest';
 
-jest.mock('request');
+jest.mock('node-fetch');
+
+let mockedFetch: jest.Mock;
+
+mockedFetch = nodeFetch as unknown as jest.Mock;
+
+const setMockedResponse = (jsonResponse: any) => {
+  mockedFetch
+    .mockImplementation(() => ({
+      json: async () => jsonResponse
+    }));
+};
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -18,7 +29,7 @@ describe('NodeFixer', () => {
   });
 
   afterEach(() => {
-    (request.get as jest.Mock).mockClear();
+    mockedFetch.mockClear();
   });
 
   it('throws if no access key provided', async () => {
@@ -26,28 +37,16 @@ describe('NodeFixer', () => {
       .rejects.toThrow('access_key is required to use fixer');
   });
 
-  it('throws there was an error in response', async () => {
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(new Error('any'), null, ''));
-
-    await expect(fixer.latest({ access_key: '123456', base: 'USD', symbols: ['AUD'] }))
-      .rejects.toThrow('any');
-  });
-
-  it('throws if body is empty', async () => {
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, ''));
-
-    await expect(fixer.latest({ access_key: '123456', base: 'USD', symbols: ['AUD'] }))
-      .rejects.toThrow('Empty response body');
-  });
-
   it('throws if body is not parsable', async () => {
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, '{{{'));
+    mockedFetch
+      .mockImplementation(() => ({
+        json() {
+          throw new Error('unexpected token');
+        }
+      }));
 
     await expect(fixer.latest({ access_key: '123456', base: 'USD', symbols: ['AUD'] }))
-      .rejects.toThrow('Failed to parse JSON body');
+      .rejects.toThrow('Request to http://data.fixer.io/api/latest resulted in non-JSON response');
   });
 
   it('throws if body contains error', async () => {
@@ -58,8 +57,7 @@ describe('NodeFixer', () => {
       }
     };
 
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+    setMockedResponse(mockResponse);
 
     await expect(fixer.latest({ access_key: '123456', base: 'USD', symbols: ['AUD'] }))
       .rejects.toThrow('ESOME: this happens');
@@ -76,8 +74,7 @@ describe('NodeFixer', () => {
       }
     };
 
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+    setMockedResponse(mockResponse);
 
     const result = await fixer.latest({ access_key: '123456' });
 
@@ -95,15 +92,13 @@ describe('NodeFixer', () => {
       }
     };
 
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+    setMockedResponse(mockResponse);
 
     await fixer.latest({ access_key: '123456', symbols: ['AUD', 'USD'] });
 
-    expect(request.get)
+    expect(mockedFetch)
       .toBeCalledWith(
-        'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD',
-        expect.any(Function)
+        'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD'
       );
   });
 
@@ -118,15 +113,13 @@ describe('NodeFixer', () => {
       }
     };
 
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+    setMockedResponse(mockResponse);
 
     await fixer.latest({ access_key: '123456', symbols: 'AUD,USD' } as any);
 
-    expect(request.get)
+    expect(mockedFetch)
       .toBeCalledWith(
-        'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD',
-        expect.any(Function)
+        'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD'
       );
   });
 
@@ -141,8 +134,7 @@ describe('NodeFixer', () => {
       }
     };
 
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+    setMockedResponse(mockResponse);
 
     const result = await fixer.forDate('2018-12-13', {
       access_key: '123456',
@@ -164,8 +156,7 @@ describe('NodeFixer', () => {
       }
     };
 
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+    setMockedResponse(mockResponse);
 
     const result = await fixer.forDate(new Date(), {
       access_key: '123456',
@@ -177,8 +168,7 @@ describe('NodeFixer', () => {
   });
 
   it('forDate throws if Date is unknown', async () => {
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, null));
+    setMockedResponse(null);
 
     await expect(fixer.forDate('any', {
       access_key: '123456',
@@ -189,8 +179,7 @@ describe('NodeFixer', () => {
 
   it('gets initialized with custom options', async () => {
     const newFixer = new NodeFixer({ baseUrl: 'any' });
-    (request.get as jest.Mock)
-      .mockImplementation((_, cb) => cb(null, null, null));
+    setMockedResponse(null);
 
     await expect(newFixer.forDate('2018-12-14'))
       .rejects.toThrow('access_key is required to use fixer');
@@ -216,8 +205,7 @@ describe('NodeFixer', () => {
         }
       };
 
-      (request.get as jest.Mock)
-        .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+      setMockedResponse(mockResponse);
 
       const result = await fixerWithParams.latest({ base: 'USD', symbols: ['AUD'] });
 
@@ -250,8 +238,7 @@ describe('NodeFixer', () => {
         }
       };
 
-      (request.get as jest.Mock)
-        .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+      setMockedResponse(mockResponse);
 
       const result = await fixer.latest();
 
@@ -273,15 +260,13 @@ describe('NodeFixer', () => {
         result: 12.5
       };
 
-      (request.get as jest.Mock)
-        .mockImplementation((_, cb) => cb(null, null, JSON.stringify(mockResponse)));
+      setMockedResponse(mockResponse);
 
       const result = await fixerWithParams.convert('EUR', 'USD', 10);
 
-      expect(request.get)
+      expect(mockedFetch)
         .toBeCalledWith(
-          `${DEFAULT_URL}/convert?access_key=1234&from=EUR&to=USD&amount=10`,
-          expect.any(Function)
+          `${DEFAULT_URL}/convert?access_key=1234&from=EUR&to=USD&amount=10`
         );
       expect(result).toEqual(mockResponse);
     });
