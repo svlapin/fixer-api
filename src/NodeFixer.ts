@@ -1,4 +1,4 @@
-import { get } from 'request';
+import nodeFetch from 'node-fetch';
 import { stringify } from 'querystring';
 import { Fixer, IRawParams } from './Fixer';
 
@@ -10,49 +10,33 @@ class NodeFixer extends Fixer {
       throw new Error('access_key is required to use fixer');
     }
 
-    return new Promise((resolve, reject) => {
-      const filteredOptions = Object.entries(opts)
-      .reduce(
-        (acc, [key, value]) => ({
-          ...acc,
-          ...(value ? { [key]: value } : {})
-        }),
-        {
-          access_key: accessKey
-        }
-      );
+    const filteredOptions = Object.entries(opts)
+    .reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        ...(value ? { [key]: value } : {})
+      }),
+      {
+        access_key: accessKey
+      }
+    );
 
-      get(
-        `${this.basicOptions.baseUrl}${path}?${stringify(filteredOptions)}`,
-        (err, resp, body) => {
-          if (err) {
-            reject(err);
-            return;
-          }
+    const url = `${this.basicOptions.baseUrl}${path}`;
 
-          if (!body) {
-            reject(new Error('Empty response body'));
-            return;
-          }
+    const response = await nodeFetch(`${url}?${stringify(filteredOptions)}`);
 
-          let parsedBody;
+    let jsonResponse;
+    try {
+      jsonResponse = await response.json();
+    } catch {
+      throw new Error(`Request to ${url} resulted in non-JSON response`);
+    }
 
-          try {
-            parsedBody = JSON.parse(body);
-          } catch (e) {
-            reject(new Error('Failed to parse JSON body'));
-            return;
-          }
+    if (jsonResponse.error) {
+      throw new Error(`${jsonResponse.error.type}: ${jsonResponse.error.info}`);
+    }
 
-          if (parsedBody.error) {
-            reject(new Error(`${parsedBody.error.type}: ${parsedBody.error.info}`));
-            return;
-          }
-
-          resolve(parsedBody as Result);
-        }
-      );
-    });
+    return jsonResponse;
   }
 }
 
