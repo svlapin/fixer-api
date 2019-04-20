@@ -142,6 +142,11 @@ describe('NodeFixer', () => {
       symbols: ['AUD']
     });
 
+    expect(mockedFetch)
+      .toBeCalledWith(
+        'http://data.fixer.io/api/2018-12-13?access_key=123456&base=USD&symbols=AUD'
+      );
+
     expect(result).toEqual(mockResponse);
   });
 
@@ -158,11 +163,43 @@ describe('NodeFixer', () => {
 
     setMockedResponse(mockResponse);
 
-    const result = await fixer.forDate(new Date(), {
+    const result = await fixer.forDate(new Date(2018, 10, 10), {
       access_key: '123456',
       base: 'USD',
       symbols: ['AUD']
     });
+
+    expect(mockedFetch)
+      .toBeCalledWith(
+        'http://data.fixer.io/api/2018-11-10?access_key=123456&base=USD&symbols=AUD'
+      );
+
+    expect(result).toEqual(mockResponse);
+  });
+
+  it('fetches forDate for a Date instance with padding', async () => {
+    const mockResponse = {
+      success: true,
+      timestamp: 1519296206,
+      base: 'USD',
+      date: '2018-12-13',
+      rates: {
+        AUD: 1.566015
+      }
+    };
+
+    setMockedResponse(mockResponse);
+
+    const result = await fixer.forDate(new Date(2018, 1, 3), {
+      access_key: '123456',
+      base: 'USD',
+      symbols: ['AUD']
+    });
+
+    expect(mockedFetch)
+      .toBeCalledWith(
+        'http://data.fixer.io/api/2018-02-03?access_key=123456&base=USD&symbols=AUD'
+      );
 
     expect(result).toEqual(mockResponse);
   });

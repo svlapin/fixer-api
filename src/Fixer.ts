@@ -1,5 +1,5 @@
-import * as moment from 'moment';
 import { DEFAULT_URL } from './constants';
+import formatDate from './formatDate';
 
 export interface IFixerRates {
   readonly [currency: string]: number;
@@ -71,7 +71,7 @@ export abstract class Fixer {
     if (typeof date === 'string' && RE_DATE.test(date)) {
       formattedDate = date;
     } else if (date instanceof Date) {
-      formattedDate = moment(date).format('YYYY-MM-DD');
+      formattedDate = formatDate(date);
     } else {
       throw new Error('Invalid date argument');
     }
