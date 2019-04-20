@@ -1,4 +1,4 @@
-# fixer.io API client for Node.js written in TypeScript
+# fixer.io API client for Node.js and browser written in TypeScript
 
 [![Build Status](https://travis-ci.org/svlapin/fixer-api.svg?branch=master)](https://travis-ci.org/svlapin/fixer-api)
 [![codecov](https://codecov.io/gh/svlapin/fixer-api/branch/master/graph/badge.svg)](https://codecov.io/gh/svlapin/fixer-api)
@@ -10,6 +10,7 @@
 
 ## Features
 
+* works in both Node.js and [browser](#using-in-browser)
 * promise or async / await based
 * extensively tested with unit and integration tests.
 
@@ -177,4 +178,38 @@ Integration tests send real requests to `fixer.io` and so require valid access k
 
 ```sh
 FIXER_API_KEY="<YOUR_FIXER_KEY_HERE>" npm run test:integration
+```
+
+## Using in browser
+
+`dist` folder of packaged npm module includes browser bundles: `fixer.iife.js` and `fixer.iife.min.js` (minified version). Each bundle exposes an instance of `fixer` as `fixerApi` global variable.
+
+Typical usage is as follows (supposing web server is serving `node-modules`):
+
+```html
+<body>
+  <script src="node-modules/fixer-api/dist/fixer.iife.min.js"></script>
+  <script>
+    fixerApi.set({ accessKey: '<YOUR_FIXER_KEY_HERE>' })
+      .latest()
+      .then((result) => {
+        console.log(result)
+      });
+  </script>
+</body>
+```
+
+or by using `unpkg` CDN:
+
+```html
+<body>
+  <script src="https://unpkg.com/fixer-api/dist/fixer.iife.min.js"></script>
+  <script>
+    fixerApi.set({ accessKey: '<YOUR_FIXER_KEY_HERE>' })
+      .latest()
+      .then((result) => {
+        console.log(result)
+      });
+  </script>
+</body>
 ```
