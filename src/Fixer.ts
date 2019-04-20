@@ -48,11 +48,6 @@ export interface IBasicOptions {
   accessKey?: string;
 }
 
-const withSerializedSymbols = ({ symbols, ...restOptions }: Partial<IRequestOptions>) => ({
-  ...restOptions,
-  ...(symbols ? { symbols: symbols instanceof Array ? symbols.join(',') : symbols } : {})
-});
-
 export abstract class Fixer {
   protected basicOptions: IBasicOptions;
 
@@ -81,11 +76,11 @@ export abstract class Fixer {
       throw new Error('Invalid date argument');
     }
 
-    return this.request<IFixerResponse>(`/${formattedDate}`, withSerializedSymbols(opts));
+    return this.request<IFixerResponse>(`/${formattedDate}`, opts);
   }
 
   async latest(opts: Partial<IRequestOptions> = {}): Promise<IFixerResponse> {
-    return this.request<IFixerResponse>('/latest', withSerializedSymbols(opts));
+    return this.request<IFixerResponse>('/latest', opts);
   }
 
   async convert(from: string, to: string, amount: number, date?: Date | string):

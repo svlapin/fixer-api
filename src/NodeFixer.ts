@@ -1,8 +1,18 @@
-import nodeFetch from 'node-fetch';
-import { stringify } from 'querystring';
 import { Fixer, IRawParams } from './Fixer';
+import stringifyOptions from './stringifyOptions';
+
+type Fetcher = (url: string) => Promise<{
+  readonly json: () => any
+}>;
 
 class NodeFixer extends Fixer {
+  public fetch: Fetcher;
+
+  constructor(fetch: Fetcher, ...restParams: any[]) {
+    super(...restParams);
+    this.fetch = fetch;
+  }
+
   async request<Result>(path: string, opts: IRawParams): Promise<Result> {
     const accessKey = opts.access_key || this.basicOptions.accessKey;
 
@@ -23,7 +33,7 @@ class NodeFixer extends Fixer {
 
     const url = `${this.basicOptions.baseUrl}${path}`;
 
-    const response = await nodeFetch(`${url}?${stringify(filteredOptions)}`);
+    const response = await this.fetch(`${url}?${stringifyOptions(filteredOptions)}`);
 
     let jsonResponse;
     try {

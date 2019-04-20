@@ -25,7 +25,7 @@ describe('NodeFixer', () => {
   let fixer: NodeFixer;
 
   beforeEach(() => {
-    fixer = new NodeFixer();
+    fixer = new NodeFixer(nodeFetch);
   });
 
   afterEach(() => {
@@ -178,7 +178,7 @@ describe('NodeFixer', () => {
   });
 
   it('gets initialized with custom options', async () => {
-    const newFixer = new NodeFixer({ baseUrl: 'any' });
+    const newFixer = new NodeFixer(nodeFetch, { baseUrl: 'any' });
     setMockedResponse(null);
 
     await expect(newFixer.forDate('2018-12-14'))
@@ -191,7 +191,7 @@ describe('NodeFixer', () => {
     let fixerWithParams: NodeFixer;
 
     beforeEach(() => {
-      fixerWithParams = new NodeFixer({ accessKey: '1234' });
+      fixerWithParams = new NodeFixer(nodeFetch, { accessKey: '1234' });
     });
 
     it('fetches latest data', async () => {
@@ -250,7 +250,7 @@ describe('NodeFixer', () => {
     let fixerWithParams: NodeFixer;
 
     beforeEach(() => {
-      fixerWithParams = new NodeFixer({ accessKey: '1234' });
+      fixerWithParams = new NodeFixer(nodeFetch, { accessKey: '1234' });
     });
 
     it('sends /convert request', async () => {
