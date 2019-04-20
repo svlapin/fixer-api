@@ -1,23 +1,23 @@
-import * as moment from 'moment';
-
 import 'jest';
+
+import formatDate from '../src/formatDate';
 
 const fixer = require('../dist');
 
 const accessKey = process.env.FIXER_API_KEY;
 
-const someMoment = moment.utc('2018/03/01', 'YYYY/MM/DD');
-const formattedMoment = someMoment.format('YYYY-MM-DD');
+const someDate = new Date();
+const formattedDate = formatDate(someDate);
 
 describe('#forDate', () => {
   it('should get data based date as a string', async () => {
-    const result = await fixer.forDate(formattedMoment, {
+    const result = await fixer.forDate(formattedDate, {
       access_key: accessKey
     });
 
     expect(result).toMatchObject({
       base: 'EUR',
-      date: formattedMoment,
+      date: formattedDate,
       rates: expect.objectContaining({
         USD: expect.any(Number),
         EUR: 1,
@@ -29,13 +29,13 @@ describe('#forDate', () => {
   });
 
   it('should get data based on Date instance', async () => {
-    const result = await fixer.forDate(someMoment.toDate(), {
+    const result = await fixer.forDate(someDate, {
       access_key: accessKey
     });
 
     expect(result).toMatchObject({
       base: 'EUR',
-      date: formattedMoment,
+      date: formattedDate,
       rates: expect.objectContaining({
         USD: expect.any(Number),
         EUR: 1,
@@ -53,7 +53,7 @@ describe('#forDate', () => {
 
       expect(result).toMatchObject({
         base: 'EUR',
-        date: moment.utc().format('YYYY-MM-DD'),
+        date: formattedDate,
         rates: expect.objectContaining({
           USD: expect.any(Number),
           EUR: 1,

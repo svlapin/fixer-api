@@ -1,6 +1,6 @@
-import * as moment from 'moment';
-
 import 'jest';
+
+import formatDate from '../src/formatDate';
 
 const fixer = require('../dist');
 
@@ -15,7 +15,7 @@ describe('#latest', () => {
 
       expect(result).toMatchObject({
         base: 'EUR',
-        date: moment.utc().format('YYYY-MM-DD'),
+        date: formatDate(new Date()),
         rates: expect.objectContaining({
           USD: expect.any(Number),
           EUR: 1,
@@ -35,7 +35,7 @@ describe('#latest', () => {
 
       expect(result).toMatchObject({
         base: 'EUR',
-        date: moment.utc().format('YYYY-MM-DD'),
+        date: formatDate(new Date()),
         rates: expect.objectContaining({
           USD: expect.any(Number),
           AUD: expect.any(Number)
@@ -54,7 +54,7 @@ describe('#latest', () => {
 
       expect(result).toMatchObject({
         base: 'EUR',
-        date: moment.utc().format('YYYY-MM-DD'),
+        date: formatDate(new Date()),
         rates: expect.objectContaining({
           USD: expect.any(Number),
           EUR: 1,
