@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "prepublishOnly": "npm run build",
-    "build": "tsc -d && rollup -c",
+    "build": "tsc -d && rollup -c && terser -c -m -- ./dist/fixer.iife.js > ./dist/fixer.iife.min.js",
     "prebuild": "rimraf ./dist",
     "test": "jest",
     "test:integration": "jest -c jest.config.integration.js",
@@ -42,6 +42,7 @@
     "rollup": "^1.10.1",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-node-resolve": "^4.2.3",
+    "terser": "^3.17.0",
     "ts-jest": "^24.0.2",
     "tslint": "^5.16.0",
     "tslint-config-airbnb": "^5.11.1",
