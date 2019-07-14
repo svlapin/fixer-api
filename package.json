@@ -34,22 +34,22 @@
     "security-check": "npm audit"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.11",
-    "@types/node-fetch": "^2.3.2",
-    "codecov": "^3.3.0",
-    "jest": "^24.7.1",
+    "@types/jest": "^24.0.15",
+    "@types/node-fetch": "^2.3.7",
+    "codecov": "^3.5.0",
+    "jest": "^24.8.0",
     "rimraf": "^2.6.3",
-    "rollup": "^1.10.1",
+    "rollup": "^1.16.7",
     "rollup-plugin-commonjs": "^9.3.4",
-    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-node-resolve": "^4.2.4",
     "terser": "^3.17.0",
     "ts-jest": "^24.0.2",
-    "tslint": "^5.16.0",
+    "tslint": "^5.18.0",
     "tslint-config-airbnb": "^5.11.1",
-    "typescript": "^3.4.4"
+    "typescript": "^3.5.3"
   },
   "dependencies": {
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.6.0"
   },
   "homepage": "https://github.com/svlapin/fixer-api#readme",
   "engines": {
