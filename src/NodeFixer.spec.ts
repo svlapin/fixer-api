@@ -214,6 +214,28 @@ describe('NodeFixer', () => {
     })).rejects.toThrow('Invalid date argument');
   });
 
+  it('fetches symbols', async () => {
+    const mockResponse = {
+      success: true,
+      symbols: {
+        AED: 'United Arab Emirates Dirham',
+      }
+    };
+
+    setMockedResponse(mockResponse);
+
+    const result = await fixer.symbols({
+      access_key: '123456',
+    });
+
+    expect(mockedFetch)
+        .toBeCalledWith(
+            'http://data.fixer.io/api/symbols?access_key=123456'
+        );
+
+    expect(result).toEqual(mockResponse);
+  });
+
   it('gets initialized with custom options', async () => {
     const newFixer = new NodeFixer(nodeFetch, { baseUrl: 'any' });
     setMockedResponse(null);
