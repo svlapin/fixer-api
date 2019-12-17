@@ -1,6 +1,11 @@
 import { DEFAULT_URL } from './constants';
 import formatDate from './formatDate';
 
+export interface IFixerError {
+  readonly type: string;
+  readonly info: string;
+}
+
 export interface IFixerRates {
   readonly [currency: string]: number;
 }
@@ -10,10 +15,16 @@ export interface IFixerResponse {
   readonly date: string;
   readonly rates: IFixerRates;
   readonly timestamp: number;
-  readonly error?: {
-    type: string,
-    info: string
-  };
+  readonly error?: IFixerError;
+}
+
+export interface IFixerSymbols {
+  readonly [symbol: string]: string;
+}
+
+export interface IFixerSymbolResponse {
+  readonly symbols: IFixerSymbols;
+  readonly error?: IFixerError;
 }
 
 export interface IFixerConvertRequestOptions {
@@ -81,6 +92,10 @@ export abstract class Fixer {
 
   async latest(opts: Partial<IRequestOptions> = {}): Promise<IFixerResponse> {
     return this.request<IFixerResponse>('/latest', opts);
+  }
+
+  async symbols(opts: Partial<IRequestOptions> = {}): Promise<IFixerSymbolResponse> {
+    return this.request<IFixerSymbolResponse>('/symbols', opts);
   }
 
   async convert(from: string, to: string, amount: number, date?: Date | string):
