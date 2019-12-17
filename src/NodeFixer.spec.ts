@@ -214,6 +214,12 @@ describe('NodeFixer', () => {
     })).rejects.toThrow('Invalid date argument');
   });
 
+  it('throws when `symbols()` is called on default instance with no access_token', async () => {
+    await expect(fixer.symbols()).rejects.toThrow(
+      'access_key is required to use fixer'
+    );
+  });
+
   it('fetches symbols', async () => {
     const mockResponse = {
       success: true,

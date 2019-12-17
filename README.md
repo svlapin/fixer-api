@@ -1,18 +1,16 @@
-# fixer.io API client for Node.js and browser written in TypeScript
+# fixer.io API client for Node.js and browser in TypeScript
 
 [![Build Status](https://travis-ci.org/svlapin/fixer-api.svg?branch=master)](https://travis-ci.org/svlapin/fixer-api)
 [![codecov](https://codecov.io/gh/svlapin/fixer-api/branch/master/graph/badge.svg)](https://codecov.io/gh/svlapin/fixer-api)
 [![npm version](https://badge.fury.io/js/fixer-api.svg)](https://badge.fury.io/js/fixer-api)
-
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
-
 [![Known Vulnerabilities](https://snyk.io/test/github/svlapin/fixer-api/badge.svg)](https://snyk.io/test/github/svlapin/fixer-api)
 
 ## Features
 
-* works in both Node.js and [browser](#using-in-browser)
-* promise or async / await based
-* extensively tested with unit and integration tests.
+- works in both Node.js and [browser](#using-in-browser)
+- promise or async / await based
+- extensively tested with unit and integration tests.
 
 ## API key
 
@@ -26,29 +24,31 @@ npm install fixer-api
 
 ## Usage
 
-* [Latest](#fetch-the-latest-data-with-latest)
-* [Historical](#fetching-historical-data-with-fordate)
-* [Conversion](#doing-currency-conversion--with-convert)
+- [Latest](#fetch-the-latest-data-with-latest)
+- [Historical](#fetching-historical-data-with-fordate)
+- [Conversion](#doing-currency-conversion--with-convert)
+- [Available symbols (currencies)](#fetching-available-symbols-with-symbols)
+
 ### Import default fixer instance
 
 ```js
-const fixer = require('fixer-api');
+const fixer = require("fixer-api");
 ```
 
 ### Set `accessKey` obtained from fixer.io
 
 ```js
-fixer.set({ accessKey: '<YOUR API KEY>' })
+fixer.set({ accessKey: "<YOUR API KEY>" });
 ```
 
 `.set` supports chaining, so you can run a query right after, e.g.:
+
 ```js
-await fixer
-  .set({ accessKey: '<YOUR API KEY>' })
-  .latest();
+await fixer.set({ accessKey: "<YOUR API KEY>" }).latest();
 ```
 
 ### Fetch the latest data with `.latest`
+
 ```js
 const data = await fixer.latest();
 console.log(data);
@@ -103,7 +103,7 @@ console.log(data);
 ### Fetch latest data based on specific base currency
 
 ```js
-const data = await fixer.latest({ base: 'USD', symbols: ['CHF'] });
+const data = await fixer.latest({ base: "USD", symbols: ["CHF"] });
 console.log(data);
 
 /*
@@ -129,11 +129,12 @@ console.log(data);
 ```
 
 or by providing `Date` instance:
+
 ```js
-const data = await fixer.forDate(new Date(), { base: 'USD', symbols: ['CHF'] });
+const data = await fixer.forDate(new Date(), { base: "USD", symbols: ["CHF"] });
 ```
 
-### Doing currency conversion  with `.convert`
+### Doing currency conversion with `.convert`
 
 Keep in mind that `.convert` requires a [paid fixer plan](https://fixer.io/product).
 
@@ -142,7 +143,7 @@ fixer.convert(<from>, <to>, <amount>, <date? = current date>)
 ```
 
 ```js
-const data = await fixer.convert('GBP', 'JPY', 25, "2018-02-22");
+const data = await fixer.convert("GBP", "JPY", 25, "2018-02-22");
 console.log(data);
 
 /*
@@ -159,7 +160,29 @@ console.log(data);
   date: "2018-02-22"
   result: 3724.305775
 */
+```
 
+### Fetching available symbols with `.symbols`
+
+```js
+const data = await fixer.symbols({
+  access_key: '<YOUR API KEY>', ]
+});
+console.log(data);
+
+/*
+{
+  success: true,
+  symbols: {
+    AED: 'United Arab Emirates Dirham',
+    AFN: 'Afghan Afghani',
+    ALL: 'Albanian Lek',
+    AMD: 'Armenian Dram',
+    ANG: 'Netherlands Antillean Guilder',
+    ...
+  }
+}
+*/
 ```
 
 ## Running tests
@@ -190,10 +213,11 @@ Typical usage is as follows (supposing web server is serving `node-modules`):
 <body>
   <script src="node-modules/fixer-api/dist/fixer.iife.min.js"></script>
   <script>
-    fixerApi.set({ accessKey: '<YOUR_FIXER_KEY_HERE>' })
+    fixerApi
+      .set({ accessKey: "<YOUR_FIXER_KEY_HERE>" })
       .latest()
-      .then((result) => {
-        console.log(result)
+      .then(result => {
+        console.log(result);
       });
   </script>
 </body>
@@ -205,10 +229,11 @@ or by using `unpkg` CDN:
 <body>
   <script src="https://unpkg.com/fixer-api/dist/fixer.iife.min.js"></script>
   <script>
-    fixerApi.set({ accessKey: '<YOUR_FIXER_KEY_HERE>' })
+    fixerApi
+      .set({ accessKey: "<YOUR_FIXER_KEY_HERE>" })
       .latest()
-      .then((result) => {
-        console.log(result)
+      .then(result => {
+        console.log(result);
       });
   </script>
 </body>
