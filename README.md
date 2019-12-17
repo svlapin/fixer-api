@@ -166,7 +166,7 @@ console.log(data);
 
 ```js
 const data = await fixer.symbols({
-  access_key: '<YOUR API KEY>', ]
+  access_key: '<YOUR API KEY>',
 });
 console.log(data);
 
