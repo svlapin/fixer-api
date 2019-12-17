@@ -4,7 +4,7 @@ const fixer = require('../dist');
 
 const accessKey = process.env.FIXER_API_KEY;
 
-describe('#latest', () => {
+describe('#symbols', () => {
   describe('default fixer', () => {
     it('should get symbol data', async () => {
       const result = await fixer.symbols({
