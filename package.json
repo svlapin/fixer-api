@@ -34,19 +34,19 @@
     "security-check": "npm audit"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.23",
-    "@types/node-fetch": "^2.5.4",
-    "codecov": "^3.6.1",
-    "jest": "^24.9.0",
-    "rimraf": "^2.7.1",
-    "rollup": "^1.27.13",
-    "rollup-plugin-commonjs": "^9.3.4",
-    "rollup-plugin-node-resolve": "^4.2.4",
-    "terser": "^3.17.0",
-    "ts-jest": "^24.2.0",
-    "tslint": "^5.20.1",
+    "@types/jest": "^24.9.1",
+    "@types/node-fetch": "^2.5.5",
+    "codecov": "^3.6.5",
+    "jest": "^25.1.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.1.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "terser": "^4.6.7",
+    "ts-jest": "^25.2.1",
+    "tslint": "^6.1.0",
     "tslint-config-airbnb": "^5.11.2",
-    "typescript": "^3.7.3"
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "node-fetch": "^2.6.0"
