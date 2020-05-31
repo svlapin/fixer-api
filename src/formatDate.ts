@@ -14,7 +14,5 @@ export function ensureDateString(input: Date | string): string {
 }
 
 export default function formatDate(date: Date) {
-  return `${date.getUTCFullYear()}-${padNumber(
-    date.getMonth() + 1
-  )}-${padNumber(date.getDate())}`;
+  return `${date.getUTCFullYear()}-${padNumber(date.getMonth() + 1)}-${padNumber(date.getDate())}`;
 }

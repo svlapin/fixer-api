@@ -1,8 +1,10 @@
 import { Fixer, IRawParams } from './Fixer';
 import stringifyOptions from './stringifyOptions';
 
-type Fetcher = (url: string) => Promise<{
-  readonly json: () => any
+type Fetcher = (
+  url: string
+) => Promise<{
+  readonly json: () => any;
 }>;
 
 class NodeFixer extends Fixer {
@@ -20,8 +22,7 @@ class NodeFixer extends Fixer {
       throw new Error('access_key is required to use fixer');
     }
 
-    const filteredOptions = Object.entries(opts)
-    .reduce(
+    const filteredOptions = Object.entries(opts).reduce(
       (acc, [key, value]) => ({
         ...acc,
         ...(value ? { [key]: value } : {})
