@@ -6,15 +6,12 @@ import 'jest';
 
 jest.mock('node-fetch');
 
-let mockedFetch: jest.Mock;
-
-mockedFetch = nodeFetch as unknown as jest.Mock;
+const mockedFetch = (nodeFetch as unknown) as jest.Mock;
 
 const setMockedResponse = (jsonResponse: any) => {
-  mockedFetch
-    .mockImplementation(() => ({
-      json: async () => jsonResponse
-    }));
+  mockedFetch.mockImplementation(() => ({
+    json: async () => jsonResponse
+  }));
 };
 
 beforeEach(() => {
@@ -33,20 +30,21 @@ describe('NodeFixer', () => {
   });
 
   it('throws if no access key provided', async () => {
-    await expect(fixer.latest({ base: 'USD', symbols: ['AUD'] }))
-      .rejects.toThrow('access_key is required to use fixer');
+    await expect(fixer.latest({ base: 'USD', symbols: ['AUD'] })).rejects.toThrow(
+      'access_key is required to use fixer'
+    );
   });
 
   it('throws if body is not parsable', async () => {
-    mockedFetch
-      .mockImplementation(() => ({
-        json() {
-          throw new Error('unexpected token');
-        }
-      }));
+    mockedFetch.mockImplementation(() => ({
+      json() {
+        throw new Error('unexpected token');
+      }
+    }));
 
-    await expect(fixer.latest({ access_key: '123456', base: 'USD', symbols: ['AUD'] }))
-      .rejects.toThrow('Request to http://data.fixer.io/api/latest resulted in non-JSON response');
+    await expect(
+      fixer.latest({ access_key: '123456', base: 'USD', symbols: ['AUD'] })
+    ).rejects.toThrow('Request to http://data.fixer.io/api/latest resulted in non-JSON response');
   });
 
   it('throws if body contains error', async () => {
@@ -59,8 +57,9 @@ describe('NodeFixer', () => {
 
     setMockedResponse(mockResponse);
 
-    await expect(fixer.latest({ access_key: '123456', base: 'USD', symbols: ['AUD'] }))
-      .rejects.toThrow('ESOME: this happens');
+    await expect(
+      fixer.latest({ access_key: '123456', base: 'USD', symbols: ['AUD'] })
+    ).rejects.toThrow('ESOME: this happens');
   });
 
   it('fetches latest data', async () => {
@@ -96,10 +95,9 @@ describe('NodeFixer', () => {
 
     await fixer.latest({ access_key: '123456', symbols: ['AUD', 'USD'] });
 
-    expect(mockedFetch)
-      .toBeCalledWith(
-        'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD'
-      );
+    expect(mockedFetch).toBeCalledWith(
+      'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD'
+    );
   });
 
   it('allows providing symbols parameter as a string', async () => {
@@ -117,10 +115,9 @@ describe('NodeFixer', () => {
 
     await fixer.latest({ access_key: '123456', symbols: 'AUD,USD' } as any);
 
-    expect(mockedFetch)
-      .toBeCalledWith(
-        'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD'
-      );
+    expect(mockedFetch).toBeCalledWith(
+      'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD'
+    );
   });
 
   it('fetches forDate', async () => {
@@ -142,10 +139,9 @@ describe('NodeFixer', () => {
       symbols: ['AUD']
     });
 
-    expect(mockedFetch)
-      .toBeCalledWith(
-        'http://data.fixer.io/api/2018-12-13?access_key=123456&base=USD&symbols=AUD'
-      );
+    expect(mockedFetch).toBeCalledWith(
+      'http://data.fixer.io/api/2018-12-13?access_key=123456&base=USD&symbols=AUD'
+    );
 
     expect(result).toEqual(mockResponse);
   });
@@ -169,10 +165,9 @@ describe('NodeFixer', () => {
       symbols: ['AUD']
     });
 
-    expect(mockedFetch)
-      .toBeCalledWith(
-        'http://data.fixer.io/api/2018-11-10?access_key=123456&base=USD&symbols=AUD'
-      );
+    expect(mockedFetch).toBeCalledWith(
+      'http://data.fixer.io/api/2018-11-10?access_key=123456&base=USD&symbols=AUD'
+    );
 
     expect(result).toEqual(mockResponse);
   });
@@ -196,10 +191,9 @@ describe('NodeFixer', () => {
       symbols: ['AUD']
     });
 
-    expect(mockedFetch)
-      .toBeCalledWith(
-        'http://data.fixer.io/api/2018-02-03?access_key=123456&base=USD&symbols=AUD'
-      );
+    expect(mockedFetch).toBeCalledWith(
+      'http://data.fixer.io/api/2018-02-03?access_key=123456&base=USD&symbols=AUD'
+    );
 
     expect(result).toEqual(mockResponse);
   });
@@ -207,37 +201,34 @@ describe('NodeFixer', () => {
   it('forDate throws if Date is unknown', async () => {
     setMockedResponse(null);
 
-    await expect(fixer.forDate('any', {
-      access_key: '123456',
-      base: 'USD',
-      symbols: ['AUD']
-    })).rejects.toThrow('Invalid date argument');
+    await expect(
+      fixer.forDate('any', {
+        access_key: '123456',
+        base: 'USD',
+        symbols: ['AUD']
+      })
+    ).rejects.toThrow('Invalid date argument');
   });
 
   it('throws when `symbols()` is called on default instance with no access_token', async () => {
-    await expect(fixer.symbols()).rejects.toThrow(
-      'access_key is required to use fixer'
-    );
+    await expect(fixer.symbols()).rejects.toThrow('access_key is required to use fixer');
   });
 
   it('fetches symbols', async () => {
     const mockResponse = {
       success: true,
       symbols: {
-        AED: 'United Arab Emirates Dirham',
+        AED: 'United Arab Emirates Dirham'
       }
     };
 
     setMockedResponse(mockResponse);
 
     const result = await fixer.symbols({
-      access_key: '123456',
+      access_key: '123456'
     });
 
-    expect(mockedFetch)
-        .toBeCalledWith(
-            'http://data.fixer.io/api/symbols?access_key=123456'
-        );
+    expect(mockedFetch).toBeCalledWith('http://data.fixer.io/api/symbols?access_key=123456');
 
     expect(result).toEqual(mockResponse);
   });
@@ -246,10 +237,10 @@ describe('NodeFixer', () => {
     const newFixer = new NodeFixer(nodeFetch, { baseUrl: 'any' });
     setMockedResponse(null);
 
-    await expect(newFixer.forDate('2018-12-14'))
-      .rejects.toThrow('access_key is required to use fixer');
-    await expect(newFixer.latest())
-      .rejects.toThrow('access_key is required to use fixer');
+    await expect(newFixer.forDate('2018-12-14')).rejects.toThrow(
+      'access_key is required to use fixer'
+    );
+    await expect(newFixer.latest()).rejects.toThrow('access_key is required to use fixer');
   });
 
   describe('when initialized with params object', () => {
@@ -280,18 +271,11 @@ describe('NodeFixer', () => {
 
   describe('#set', () => {
     it('allows to set accessKey with chaining', async () => {
-      fixer
-        .set()
-        .set({ baseUrl: 'any' })
-        .set({ accessKey: '1234' })
-        .set({ accessKey: '12345' });
+      fixer.set().set({ baseUrl: 'any' }).set({ accessKey: '1234' }).set({ accessKey: '12345' });
     });
 
     it('fetches latest data after accessKey was set with chaining', async () => {
-      fixer
-        .set({ accessKey: '1234' })
-        .set({ accessKey: '12345' })
-        .set();
+      fixer.set({ accessKey: '1234' }).set({ accessKey: '12345' }).set();
 
       const mockResponse = {
         success: true,
@@ -329,10 +313,9 @@ describe('NodeFixer', () => {
 
       const result = await fixerWithParams.convert('EUR', 'USD', 10);
 
-      expect(mockedFetch)
-        .toBeCalledWith(
-          `${DEFAULT_URL}/convert?access_key=1234&from=EUR&to=USD&amount=10`
-        );
+      expect(mockedFetch).toBeCalledWith(
+        `${DEFAULT_URL}/convert?access_key=1234&from=EUR&to=USD&amount=10`
+      );
       expect(result).toEqual(mockResponse);
     });
   });
@@ -366,10 +349,9 @@ describe('NodeFixer', () => {
 
       const result = await fixerWithParams.timeseries(startDate, endDate);
 
-      expect(mockedFetch)
-        .toBeCalledWith(
-          `${DEFAULT_URL}/timeseries?access_key=1234&start_date=2018-12-14&end_date=2018-12-15`
-        );
+      expect(mockedFetch).toBeCalledWith(
+        `${DEFAULT_URL}/timeseries?access_key=1234&start_date=2018-12-14&end_date=2018-12-15`
+      );
       expect(result).toEqual(mockResponse);
     });
   });

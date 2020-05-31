@@ -2,6 +2,7 @@ import 'jest';
 
 import formatDate from '../src/formatDate';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const fixer = require('../dist');
 
 const accessKey = process.env.FIXER_API_KEY;
@@ -48,9 +49,7 @@ describe('#latest', () => {
 
   describe('default instance updated with accessKey', () => {
     it('should get latest data', async () => {
-      const result = await fixer
-        .set({ accessKey })
-        .latest();
+      const result = await fixer.set({ accessKey }).latest();
 
       expect(result).toMatchObject({
         base: 'EUR',

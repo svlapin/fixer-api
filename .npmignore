@@ -6,3 +6,5 @@ index.ts
 tsconfig.json
 tslint.json
 coverage
+.eslintrc.js
+.prettierrc

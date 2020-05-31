@@ -39,7 +39,7 @@ export interface IFixerConvertResponse {
   readonly query: {
     readonly from: string;
     readonly to: string;
-    readonly amount: number
+    readonly amount: number;
   };
   readonly date: string;
   readonly result: number;
@@ -95,8 +95,12 @@ export abstract class Fixer {
     return this.request<IFixerSymbolResponse>('/symbols', opts);
   }
 
-  async convert(from: string, to: string, amount: number, date?: Date | string):
-    Promise<IFixerConvertResponse> {
+  async convert(
+    from: string,
+    to: string,
+    amount: number,
+    date?: Date | string
+  ): Promise<IFixerConvertResponse> {
     return this.request<IFixerConvertResponse>('/convert', {
       from,
       to,
@@ -108,7 +112,8 @@ export abstract class Fixer {
   async timeseries(
     startDate: Date | string,
     endDate: Date | string,
-    opts: Partial<IRequestOptions> = {}) {
+    opts: Partial<IRequestOptions> = {}
+  ) {
     const start = ensureDateString(startDate);
     const end = ensureDateString(endDate);
     return this.request<IFixerTimeseriesResponse>('/timeseries', {
