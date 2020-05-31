@@ -27,6 +27,7 @@ npm install fixer-api
 - [Latest](#fetch-the-latest-data-with-latest)
 - [Historical](#fetching-historical-data-with-fordate)
 - [Conversion](#doing-currency-conversion--with-convert)
+- [Timeseries](#fetching-historical-rates-with-timeseries)
 - [Available symbols (currencies)](#fetching-available-symbols-with-symbols)
 
 ### Import default fixer instance
@@ -181,6 +182,51 @@ console.log(data);
     ANG: 'Netherlands Antillean Guilder',
     ...
   }
+}
+*/
+```
+
+### Fetching historical rates with `.timeseries`
+
+```js
+const data = await fixer.timeseries(
+  '2012-05-01',
+  '2012-05-25',
+  {
+    // optionally pass base currency
+    base: 'EUR',
+    // optionally pass symbols to query rates for
+    symbols: ['USD', 'AUD', 'CAD'],
+    // optionally pass assess key
+    access_key: '<YOUR API KEY>'
+  }
+);
+console.log(data);
+
+/*
+{
+  success: true,
+  timeseries: true,
+  start_date: '2012-05-01',
+  end_date: '2012-05-03',
+  base: 'EUR',
+  rates: {
+    '2012-05-01': {
+      USD: 1.322891,
+      AUD: 1.278047,
+      CAD: 1.302303,
+    },
+    '2012-05-02': {
+      USD: 1.315066,
+      AUD: 1.274202,
+      CAD: 1.299083,
+    },
+    '2012-05-03': {
+      USD: 1.314491,
+      AUD: 1.280135,
+      CAD: 1.296868,
+    },
+  },
 }
 */
 ```
