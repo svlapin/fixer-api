@@ -336,4 +336,41 @@ describe('NodeFixer', () => {
       expect(result).toEqual(mockResponse);
     });
   });
+
+  describe('#timeseries', () => {
+    let fixerWithParams: NodeFixer;
+
+    beforeEach(() => {
+      fixerWithParams = new NodeFixer(nodeFetch, { accessKey: '1234' });
+    });
+
+    it('sends /timeseries request', async () => {
+      const startDate = '2018-12-14';
+      const endDate = '2018-12-15';
+
+      const mockResponse = {
+        success: true,
+        start_date: startDate,
+        end_date: endDate,
+        rates: {
+          '2018-12-14': {
+            EUR: 1.0
+          },
+          '2018-12-15': {
+            EUR: 2.0
+          }
+        }
+      };
+
+      setMockedResponse(mockResponse);
+
+      const result = await fixerWithParams.timeseries(startDate, endDate);
+
+      expect(mockedFetch)
+        .toBeCalledWith(
+          `${DEFAULT_URL}/timeseries?access_key=1234&start_date=2018-12-14&end_date=2018-12-15`
+        );
+      expect(result).toEqual(mockResponse);
+    });
+  });
 });
