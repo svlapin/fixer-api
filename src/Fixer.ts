@@ -1,5 +1,5 @@
 import { DEFAULT_URL } from './constants';
-import formatDate from './formatDate';
+import { ensureDateString } from './formatDate';
 
 export interface IFixerError {
   readonly type: string;
@@ -45,6 +45,14 @@ export interface IFixerConvertResponse {
   readonly result: number;
 }
 
+export interface IFixerTimeseriesResponse {
+  readonly success: boolean;
+  readonly start_date: string;
+  readonly end_date: string;
+  readonly base: string;
+  readonly rates: Record<string, Record<string, number>>;
+}
+
 export interface IRawParams {
   [key: string]: any;
 }
@@ -76,18 +84,7 @@ export abstract class Fixer {
   }
 
   async forDate(date: Date | string, opts: Partial<IRequestOptions> = {}): Promise<IFixerResponse> {
-    let formattedDate;
-
-    const RE_DATE = /^\d{4}-\d{2}-\d{2}$/;
-    if (typeof date === 'string' && RE_DATE.test(date)) {
-      formattedDate = date;
-    } else if (date instanceof Date) {
-      formattedDate = formatDate(date);
-    } else {
-      throw new Error('Invalid date argument');
-    }
-
-    return this.request<IFixerResponse>(`/${formattedDate}`, opts);
+    return this.request<IFixerResponse>(`/${ensureDateString(date)}`, opts);
   }
 
   async latest(opts: Partial<IRequestOptions> = {}): Promise<IFixerResponse> {
@@ -105,6 +102,19 @@ export abstract class Fixer {
       to,
       amount,
       date
+    });
+  }
+
+  async timeseries(
+    startDate: Date | string,
+    endDate: Date | string,
+    opts: Partial<IRequestOptions> = {}) {
+    const start = ensureDateString(startDate);
+    const end = ensureDateString(endDate);
+    return this.request<IFixerTimeseriesResponse>('/timeseries', {
+      start_date: start,
+      end_date: end,
+      ...opts
     });
   }
 
