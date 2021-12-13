@@ -1,6 +1,5 @@
 spec
 src/
-.travis.yml
 codecov.yml
 index.ts
 tsconfig.json
