@@ -1,4 +1,4 @@
-name: CI checks
+name: Integration tests
 on:
   schedule:
     - cron: 0 0 * * *
