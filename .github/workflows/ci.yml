@@ -16,4 +16,4 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
-      - run: npm run test:coverage:upload
+      - uses: codecov/codecov-action@v2
