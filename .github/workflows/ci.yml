@@ -1,5 +1,5 @@
-name: Node.js CI
-on: [push]
+name: CI checks
+on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,8 +13,8 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm install
       - run: npm run security-check
+      - run: npx tsc --noEmit
       - run: npm run lint
       - run: npm test
       - run: npm run build
-      #- run: npm run test:integration
       - uses: codecov/codecov-action@v2
