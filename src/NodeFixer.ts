@@ -1,9 +1,7 @@
 import { Fixer, IRawParams } from './Fixer';
 import stringifyOptions from './stringifyOptions';
 
-type Fetcher = (
-  url: string
-) => Promise<{
+type Fetcher = (url: string) => Promise<{
   readonly json: () => any;
 }>;
 
