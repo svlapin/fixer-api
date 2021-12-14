@@ -6,7 +6,7 @@ import 'jest';
 
 jest.mock('node-fetch');
 
-const mockedFetch = (nodeFetch as unknown) as jest.Mock;
+const mockedFetch = nodeFetch as unknown as jest.Mock;
 
 const setMockedResponse = (jsonResponse: any) => {
   mockedFetch.mockImplementation(() => ({
