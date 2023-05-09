@@ -51,7 +51,7 @@
     "typescript": "5.0.4"
   },
   "dependencies": {
-    "node-fetch": "2.6.10"
+    "node-fetch": "2.6.11"
   },
   "homepage": "https://github.com/svlapin/fixer-api#readme",
   "engines": {
