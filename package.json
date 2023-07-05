@@ -30,7 +30,7 @@
     "test": "jest",
     "test:integration": "jest -c jest.config.integration.js",
     "lint": "eslint -c .eslintrc.js --ext .ts src",
-    "security-check": "npm audit"
+    "security-check": "npm audit --production"
   },
   "devDependencies": {
     "@types/jest": "29.5.2",
