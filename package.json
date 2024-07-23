@@ -48,7 +48,7 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "terser": "5.31.3",
     "ts-jest": "29.2.3",
-    "typescript": "5.5.3"
+    "typescript": "5.5.4"
   },
   "dependencies": {
     "node-fetch": "2.7.0"
