@@ -43,7 +43,7 @@
     "jest": "29.7.0",
     "prettier": "3.3.3",
     "rimraf": "5.0.10",
-    "rollup": "2.79.1",
+    "rollup": "3.29.5",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
     "terser": "5.33.0",
