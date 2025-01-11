@@ -1,6 +1,6 @@
-import commonjs from 'rollup-plugin-commonjs';
+import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
-import pkg from './package.json';
+import pkg from './package.json' with { type: 'json' };
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 

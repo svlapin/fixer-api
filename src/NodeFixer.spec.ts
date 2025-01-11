@@ -8,6 +8,7 @@ jest.mock('node-fetch');
 
 const mockedFetch = nodeFetch as unknown as jest.Mock;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setMockedResponse = (jsonResponse: any) => {
   mockedFetch.mockImplementation(() => ({
     json: async () => jsonResponse
@@ -113,7 +114,8 @@ describe('NodeFixer', () => {
 
     setMockedResponse(mockResponse);
 
-    await fixer.latest({ access_key: '123456', symbols: 'AUD,USD' } as any);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await fixer.latest({ access_key: '123456', symbols: 'AUD,USD' as any });
 
     expect(mockedFetch).toBeCalledWith(
       'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD'

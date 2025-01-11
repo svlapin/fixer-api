@@ -2,12 +2,14 @@ import { Fixer, IRawParams } from './Fixer';
 import stringifyOptions from './stringifyOptions';
 
 type Fetcher = (url: string) => Promise<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly json: () => any;
 }>;
 
 class NodeFixer extends Fixer {
   public fetch: Fetcher;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(fetch: Fetcher, ...restParams: any[]) {
     super(...restParams);
     this.fetch = fetch;
