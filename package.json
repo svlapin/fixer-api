@@ -47,7 +47,7 @@
     "rimraf": "6.0.1",
     "rollup": "4.43.0",
     "terser": "5.42.0",
-    "ts-jest": "29.3.4",
+    "ts-jest": "29.4.0",
     "typescript": "5.8.3"
   },
   "dependencies": {
