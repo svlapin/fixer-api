@@ -10,6 +10,11 @@ const someDate = new Date();
 const formattedDate = formatDate(someDate);
 
 describe('#forDate', () => {
+  afterEach((cb) => {
+    // sleep to avoid rate limiting
+    setTimeout(cb, 1000);
+  });
+
   it('should get data based date as a string', async () => {
     const result = await fixer.forDate(formattedDate, {
       access_key: accessKey
