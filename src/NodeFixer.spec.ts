@@ -1,12 +1,11 @@
 import NodeFixer from './NodeFixer';
-import nodeFetch from 'node-fetch';
 import { DEFAULT_URL } from './constants';
 
 import 'jest';
 
-jest.mock('node-fetch');
-
-const mockedFetch = nodeFetch as unknown as jest.Mock;
+// Mock the global fetch function
+const mockedFetch = jest.fn();
+global.fetch = mockedFetch;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const setMockedResponse = (jsonResponse: any) => {
@@ -23,7 +22,7 @@ describe('NodeFixer', () => {
   let fixer: NodeFixer;
 
   beforeEach(() => {
-    fixer = new NodeFixer(nodeFetch);
+    fixer = new NodeFixer(fetch);
   });
 
   afterEach(() => {
@@ -236,7 +235,7 @@ describe('NodeFixer', () => {
   });
 
   it('gets initialized with custom options', async () => {
-    const newFixer = new NodeFixer(nodeFetch, { baseUrl: 'any' });
+    const newFixer = new NodeFixer(fetch, { baseUrl: 'any' });
     setMockedResponse(null);
 
     await expect(newFixer.forDate('2018-12-14')).rejects.toThrow(
@@ -249,7 +248,7 @@ describe('NodeFixer', () => {
     let fixerWithParams: NodeFixer;
 
     beforeEach(() => {
-      fixerWithParams = new NodeFixer(nodeFetch, { accessKey: '1234' });
+      fixerWithParams = new NodeFixer(fetch, { accessKey: '1234' });
     });
 
     it('fetches latest data', async () => {
@@ -301,7 +300,7 @@ describe('NodeFixer', () => {
     let fixerWithParams: NodeFixer;
 
     beforeEach(() => {
-      fixerWithParams = new NodeFixer(nodeFetch, { accessKey: '1234' });
+      fixerWithParams = new NodeFixer(fetch, { accessKey: '1234' });
     });
 
     it('sends /convert request', async () => {
@@ -326,7 +325,7 @@ describe('NodeFixer', () => {
     let fixerWithParams: NodeFixer;
 
     beforeEach(() => {
-      fixerWithParams = new NodeFixer(nodeFetch, { accessKey: '1234' });
+      fixerWithParams = new NodeFixer(fetch, { accessKey: '1234' });
     });
 
     it('sends /timeseries request', async () => {
