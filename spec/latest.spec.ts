@@ -8,11 +8,14 @@ const fixer = require('../dist');
 const accessKey = process.env.FIXER_API_KEY;
 
 describe('#latest', () => {
+  afterEach((cb) => {
+    // sleep to avoid rate limiting
+    setTimeout(cb, 1000);
+  });
+
   describe('default fixer', () => {
     it('should get latest data', async () => {
-      const result = await fixer.latest({
-        access_key: accessKey
-      });
+      const result = await fixer.latest({ access_key: accessKey });
 
       expect(result).toMatchObject({
         base: 'EUR',
@@ -37,10 +40,7 @@ describe('#latest', () => {
       expect(result).toMatchObject({
         base: 'EUR',
         date: formatDate(new Date()),
-        rates: expect.objectContaining({
-          USD: expect.any(Number),
-          AUD: expect.any(Number)
-        }),
+        rates: expect.objectContaining({ USD: expect.any(Number), AUD: expect.any(Number) }),
         success: true,
         timestamp: expect.any(Number)
       });
