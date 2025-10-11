@@ -56,6 +56,6 @@
   },
   "homepage": "https://github.com/svlapin/fixer-api#readme",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=18.0.0"
   }
 }
