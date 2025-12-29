@@ -36,8 +36,8 @@
     "@rollup/plugin-commonjs": "28.0.9",
     "@rollup/plugin-node-resolve": "16.0.3",
     "@types/jest": "29.5.14",
-    "@typescript-eslint/eslint-plugin": "8.50.1",
-    "@typescript-eslint/parser": "8.50.1",
+    "@typescript-eslint/eslint-plugin": "8.51.0",
+    "@typescript-eslint/parser": "8.51.0",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
@@ -48,7 +48,7 @@
     "terser": "5.44.1",
     "ts-jest": "29.4.6",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.50.1"
+    "typescript-eslint": "8.51.0"
   },
   "homepage": "https://github.com/svlapin/fixer-api#readme",
   "engines": {
