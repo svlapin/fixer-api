@@ -45,7 +45,7 @@
     "prettier": "3.8.0",
     "rimraf": "6.1.2",
     "rollup": "4.55.1",
-    "terser": "5.44.1",
+    "terser": "5.46.0",
     "ts-jest": "29.4.6",
     "typescript": "5.9.3",
     "typescript-eslint": "8.53.0"
