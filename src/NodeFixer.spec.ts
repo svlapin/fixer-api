@@ -95,7 +95,7 @@ describe('NodeFixer', () => {
 
     await fixer.latest({ access_key: '123456', symbols: ['AUD', 'USD'] });
 
-    expect(mockedFetch).toBeCalledWith(
+    expect(mockedFetch).toHaveBeenCalledWith(
       'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD'
     );
   });
@@ -116,7 +116,7 @@ describe('NodeFixer', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await fixer.latest({ access_key: '123456', symbols: 'AUD,USD' as any });
 
-    expect(mockedFetch).toBeCalledWith(
+    expect(mockedFetch).toHaveBeenCalledWith(
       'http://data.fixer.io/api/latest?access_key=123456&symbols=AUD%2CUSD'
     );
   });
@@ -140,7 +140,7 @@ describe('NodeFixer', () => {
       symbols: ['AUD']
     });
 
-    expect(mockedFetch).toBeCalledWith(
+    expect(mockedFetch).toHaveBeenCalledWith(
       'http://data.fixer.io/api/2018-12-13?access_key=123456&base=USD&symbols=AUD'
     );
 
@@ -166,7 +166,7 @@ describe('NodeFixer', () => {
       symbols: ['AUD']
     });
 
-    expect(mockedFetch).toBeCalledWith(
+    expect(mockedFetch).toHaveBeenCalledWith(
       'http://data.fixer.io/api/2018-11-10?access_key=123456&base=USD&symbols=AUD'
     );
 
@@ -192,7 +192,7 @@ describe('NodeFixer', () => {
       symbols: ['AUD']
     });
 
-    expect(mockedFetch).toBeCalledWith(
+    expect(mockedFetch).toHaveBeenCalledWith(
       'http://data.fixer.io/api/2018-02-03?access_key=123456&base=USD&symbols=AUD'
     );
 
@@ -229,7 +229,7 @@ describe('NodeFixer', () => {
       access_key: '123456'
     });
 
-    expect(mockedFetch).toBeCalledWith('http://data.fixer.io/api/symbols?access_key=123456');
+    expect(mockedFetch).toHaveBeenCalledWith('http://data.fixer.io/api/symbols?access_key=123456');
 
     expect(result).toEqual(mockResponse);
   });
@@ -314,7 +314,7 @@ describe('NodeFixer', () => {
 
       const result = await fixerWithParams.convert('EUR', 'USD', 10);
 
-      expect(mockedFetch).toBeCalledWith(
+      expect(mockedFetch).toHaveBeenCalledWith(
         `${DEFAULT_URL}/convert?access_key=1234&from=EUR&to=USD&amount=10`
       );
       expect(result).toEqual(mockResponse);
@@ -350,7 +350,7 @@ describe('NodeFixer', () => {
 
       const result = await fixerWithParams.timeseries(startDate, endDate);
 
-      expect(mockedFetch).toBeCalledWith(
+      expect(mockedFetch).toHaveBeenCalledWith(
         `${DEFAULT_URL}/timeseries?access_key=1234&start_date=2018-12-14&end_date=2018-12-15`
       );
       expect(result).toEqual(mockResponse);
